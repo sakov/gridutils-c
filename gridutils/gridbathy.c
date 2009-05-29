@@ -479,7 +479,7 @@ int main(int argc, char* argv[])
                             p.y = fj;
                         }
 
-			interpolate_point(interpolator, &p);
+                        interpolate_point(interpolator, &p);
 
                         if (isnan(p.z))
                             continue;
