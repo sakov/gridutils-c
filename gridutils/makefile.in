@@ -58,6 +58,7 @@ gridaverager.h\
 gridmap.h\
 gridnodes.h\
 gucommon.h\
+kdtree.h\
 nan.h\
 poly.h\
 version.h
@@ -66,12 +67,14 @@ LIBOBJECTS =\
 gridmap.o\
 gridnodes.o\
 gucommon.o\
+kdtree.o\
 poly.o
 
 SHLIBOBJECTS =\
 gridmap.t\
 gridnodes.t\
 gucommon.t\
+kdtree.t\
 poly.t
 
 PROGRAMS =\
@@ -162,7 +165,7 @@ configclean:
 distclean: clean configclean
 
 indent:
-	indent -T FILE -T gridmap -T gridnodes -T gridaverager -T extent -T poly -T subgrid -T NODETYPE -T COORDTYPE -T gridstats $(SRC) $(HEADERS)
+	indent -T FILE -T gridmap -T gridnodes -T gridaverager -T extent -T poly -T subgrid -T NODETYPE -T COORDTYPE -T gridstats -T kdtree -T kdnode $(SRC) $(HEADERS)
 	rm -f *~
 
 dist:
