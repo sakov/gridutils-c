@@ -1,3 +1,5 @@
+v. 0.48, 25 August 2010
+        -- Updated README file and in-build descriptions for some utilities
 v. 0.47, April 2010
         -- Added conversion from grid type CEN to types DD and CO (this involves
            some extrapolation). Included kdtree.c and kdtree.h by John 
