@@ -1,3 +1,5 @@
+v. 0.49, 1 May 2012
+        -- A change in nan.h to distinguish between gcc and icc
 v. 0.48, 25 August 2010
         -- Updated README file and in-build descriptions for some utilities
 v. 0.47, April 2010
