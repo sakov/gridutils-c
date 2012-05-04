@@ -14,6 +14,8 @@ bindir = @bindir@
 libdir = @libdir@
 includedir = @includedir@
 
+WITH_GRIDBATHY = @WITH_GRIDBATHY@
+
 INSTALLDIRS =\
 $(bindir)\
 $(libdir)\
@@ -83,8 +85,11 @@ getnodes\
 insertgrid\
 setbathy\
 subgrid\
-xy2ij\
-gridbathy
+xy2ij
+
+ifeq ($(WITH_GRIDBATHY),yes)
+  PROGRAMS += gridbathy
+endif
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -I. -c $*.c -o $*.o
