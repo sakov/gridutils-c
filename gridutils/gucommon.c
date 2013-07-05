@@ -8,7 +8,8 @@
  *                  CSIRO Marine Research
  *  
  *  Purpose:        Some common stuff for grid utilities
- *  Revisions:      none
+ *  Revisions:      4 Jul 2013 PS
+ *                    Using saved errno
  *
  *****************************************************************************/
 
@@ -43,8 +44,11 @@ FILE* gu_fopen(const char* path, const char* mode)
     FILE* f = NULL;
 
     f = fopen(path, mode);
-    if (f == NULL)
-        gu_quit("%s: could not open for \"%s\" : %s\n", path, mode, strerror(errno));
+    if (f == NULL) {
+        int errno_saved = errno;
+
+        gu_quit("%s: could not open for \"%s\" : %s\n", path, mode, strerror(errno_saved));
+    }
 
     return f;
 }
@@ -67,12 +71,18 @@ void* gu_alloc2d(int n1, int n2, size_t unitsize)
         gu_quit("alloc2d(): invalid size (n1 = %d, n2 = %d)\n", n1, n2);
 
     size = n1 * n2;
-    if ((p = calloc(size, unitsize)) == NULL)
-        gu_quit("gu_alloc2d(): %s\n", strerror(errno));
+    if ((p = calloc(size, unitsize)) == NULL) {
+        int errno_saved = errno;
+
+        gu_quit("gu_alloc2d(): %s\n", strerror(errno_saved));
+    }
 
     size = n2 * sizeof(void*);
-    if ((pp = malloc(size)) == NULL)
-        gu_quit("gu_alloc2d(): %s\n", strerror(errno));
+    if ((pp = malloc(size)) == NULL) {
+        int errno_saved = errno;
+
+        gu_quit("gu_alloc2d(): %s\n", strerror(errno_saved));
+    }
     for (i = 0; i < n2; i++)
         pp[i] = &p[i * n1 * unitsize];
 
