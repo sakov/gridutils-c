@@ -1,3 +1,6 @@
+v. 0.52, 4 Jul 2013
+	-- Added a new constructor gridnodes_create2()
+	-- Using a saved errno in strerror() now
 v. 0.51, 4 May 2012
         -- Modified configure to avoid compilation of gridbathy if nn or csa
            are not available

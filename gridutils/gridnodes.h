@@ -8,7 +8,7 @@
  *                  CSIRO Marine Research
  *  
  *  Purpose:        Header file for handling grid node arrays
- *  Revisions:      none
+ *  Revisions:      None
  *
  *****************************************************************************/
 
@@ -35,6 +35,7 @@ extern char* nodetype2str[];
 
 gridnodes* gridnodes_read(char* fname, NODETYPE type);
 gridnodes* gridnodes_create(int nx, int ny, NODETYPE type);
+gridnodes* gridnodes_create2(int nx, int ny, NODETYPE type, double** gx, double** gy);
 void gridnodes_readnextpoint(gridnodes* gn, double x, double y);
 void gridnodes_destroy(gridnodes* gn);
 

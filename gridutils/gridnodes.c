@@ -8,7 +8,10 @@
  *                  CSIRO Marine Research
  *  
  *  Purpose:        Handling of grid node arrays
- *  Revisions:      14 Feb 2007 PS: added gridnodes_readnextpoint()
+ *  Revisions:      14 Feb 2007 PS
+ *                    Added gridnodes_readnextpoint()
+ *                  4 Jul 2013 PS
+ *                    Added gridnodes_create2()
  *
  *****************************************************************************/
 
@@ -18,7 +21,6 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <math.h>
-#include <errno.h>
 #include <assert.h>
 #include "nan.h"
 #include "gridnodes.h"
@@ -162,6 +164,31 @@ gridnodes* gridnodes_create(int nx, int ny, NODETYPE type)
     gn->ny = ny;
     gn->gx = gu_alloc2d(nx, ny, sizeof(double));
     gn->gy = gu_alloc2d(nx, ny, sizeof(double));
+    gn->type = type;
+    gn->validated = 0;
+    gn->stats = NULL;
+    gn->nextpoint = 0;
+
+    return gn;
+}
+
+/* Constructor.
+ *
+ * @param nx Number of columns
+ * @param nx Number of rows
+ * @param type Node type
+ * @param gx X coordinates of the nodes
+ * @param gy Y coordinates of the nodes
+ * @return Gridnodes structure
+ */
+gridnodes* gridnodes_create2(int nx, int ny, NODETYPE type, double** gx, double** gy)
+{
+    gridnodes* gn = malloc(sizeof(gridnodes));
+
+    gn->nx = nx;
+    gn->ny = ny;
+    gn->gx = gx;
+    gn->gy = gy;
     gn->type = type;
     gn->validated = 0;
     gn->stats = NULL;
