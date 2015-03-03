@@ -13,7 +13,7 @@
  *****************************************************************************/
 
 #if !defined(_GRIDNODES_H)
-#define GRIDNODES_H
+#define _GRIDNODES_H
 
 typedef enum {
     NT_NONE = 0,                /* not specified */
