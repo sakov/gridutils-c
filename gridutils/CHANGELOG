@@ -1,3 +1,5 @@
+v. 0.53, 3 Mar 2015
+	-- Corrected the header guard in gridnodes.h
 v. 0.52, 4 Jul 2013
 	-- Added a new constructor gridnodes_create2()
 	-- Using a saved errno in strerror() now
