@@ -597,106 +597,106 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
         }
     } else if (gn->type == NT_CEN) {
         if (type == NT_COR) {
-	    kdtree* kt = kd_create(2); /* 2 dimensions */
+            kdtree* kt = kd_create(2);  /* 2 dimensions */
 
             gn1->nx = gn->nx + 1;
             gn1->ny = gn->ny + 1;
             gn1->gx = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
             gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
-	    
-	    /*
-	     * put positions of the cells formed by cell centers into kd tree
-	     */
-	    for (i = 0; i < gn->nx - 1; ++i) {
-		for (j = 0; j < gn->ny - 1; ++j) {
-		    if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
-			double pos[2];
 
-			pos[0] = (double) i + 0.5;
-			pos[1] = (double) j + 0.5;
-			kd_insert(kt, pos, NULL);
-		    }
-		}
-	    }
+            /*
+             * put positions of the cells formed by cell centers into kd tree
+             */
+            for (i = 0; i < gn->nx - 1; ++i) {
+                for (j = 0; j < gn->ny - 1; ++j) {
+                    if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
+                        double pos[2];
 
-	    /*
-	     * for each node coordinate find the nearest point in the kd tree;
-	     * if it is in a neighbour cell - then extrapolate the cell
-	     * position using the mapping of this cell
-	     */
-	    for (i = 0; i < gn1->nx; ++i) {
-		for (j = 0; j < gn1->ny; ++j) {
-		    double pos[2];
-		    double pos1[2];
-		    kdres* nearest = NULL;
+                        pos[0] = (double) i + 0.5;
+                        pos[1] = (double) j + 0.5;
+                        kd_insert(kt, pos, NULL);
+                    }
+                }
+            }
 
-		    pos[0] = (double) i - 0.5;
-		    pos[1] = (double) j - 0.5;
-		    nearest = kd_nearest(kt, pos);
-		    kd_res_item(nearest, pos1);
+            /*
+             * for each node coordinate find the nearest point in the kd tree;
+             * if it is in a neighbour cell - then extrapolate the cell
+             * position using the mapping of this cell
+             */
+            for (i = 0; i < gn1->nx; ++i) {
+                for (j = 0; j < gn1->ny; ++j) {
+                    double pos[2];
+                    double pos1[2];
+                    kdres* nearest = NULL;
 
-		    if (hypot(pos1[0] - pos[0], pos1[1] - pos[1]) < 1.5) {
-			fij2xy(gn, pos[0], pos[1], (int) pos1[0], (int) pos1[1], &gn1->gx[j][i], &gn1->gy[j][i]);
-		    } else {
-			gn1->gx[j][i] = NaN;
-			gn1->gy[j][i] = NaN;
-		    }
-		}
-	    }
-	    gn->type = NT_COR;
-	    gridnodes_validate_cor(gn1);
-	    kd_free(kt);
-	} else if (type == NT_DD) {
-	    kdtree* kt = kd_create(2); /* 2 dimensions */
+                    pos[0] = (double) i - 0.5;
+                    pos[1] = (double) j - 0.5;
+                    nearest = kd_nearest(kt, pos);
+                    kd_res_item(nearest, pos1);
+
+                    if (hypot(pos1[0] - pos[0], pos1[1] - pos[1]) < 1.5) {
+                        fij2xy(gn, pos[0], pos[1], (int) pos1[0], (int) pos1[1], &gn1->gx[j][i], &gn1->gy[j][i]);
+                    } else {
+                        gn1->gx[j][i] = NaN;
+                        gn1->gy[j][i] = NaN;
+                    }
+                }
+            }
+            gn->type = NT_COR;
+            gridnodes_validate_cor(gn1);
+            kd_free(kt);
+        } else if (type == NT_DD) {
+            kdtree* kt = kd_create(2);  /* 2 dimensions */
 
             gn1->nx = gn->nx * 2 + 1;
             gn1->ny = gn->ny * 2 + 1;
             gn1->gx = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
             gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
 
-	    /*
-	     * put positions of the cells formed by cell centers into kd tree
-	     */
-	    for (i = 0; i < gn->nx - 1; ++i) {
-		for (j = 0; j < gn->ny - 1; ++j) {
-		    if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
-			double pos[2];
+            /*
+             * put positions of the cells formed by cell centers into kd tree
+             */
+            for (i = 0; i < gn->nx - 1; ++i) {
+                for (j = 0; j < gn->ny - 1; ++j) {
+                    if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
+                        double pos[2];
 
-			pos[0] = (double) i + 0.5;
-			pos[1] = (double) j + 0.5;
-			kd_insert(kt, pos, NULL);
-		    }
-		}
-	    }
+                        pos[0] = (double) i + 0.5;
+                        pos[1] = (double) j + 0.5;
+                        kd_insert(kt, pos, NULL);
+                    }
+                }
+            }
 
-	    /*
-	     * for each node coordinate find the nearest point in the kd tree;
-	     * if it is in a neighbour cell - then extrapolate the cell
-	     * position using the mapping of this cell
-	     */
-	    for (i = 0; i < gn1->nx; ++i) {
-		for (j = 0; j < gn1->ny; ++j) {
-		    double pos[2];
-		    double pos1[2];
-		    kdres* nearest = NULL;
+            /*
+             * for each node coordinate find the nearest point in the kd tree;
+             * if it is in a neighbour cell - then extrapolate the cell
+             * position using the mapping of this cell
+             */
+            for (i = 0; i < gn1->nx; ++i) {
+                for (j = 0; j < gn1->ny; ++j) {
+                    double pos[2];
+                    double pos1[2];
+                    kdres* nearest = NULL;
 
-		    pos[0] = (double) i / 2.0 - 0.5;
-		    pos[1] = (double) j / 2.0 - 0.5;
-		    nearest = kd_nearest(kt, pos);
-		    kd_res_item(nearest, pos1);
+                    pos[0] = (double) i / 2.0 - 0.5;
+                    pos[1] = (double) j / 2.0 - 0.5;
+                    nearest = kd_nearest(kt, pos);
+                    kd_res_item(nearest, pos1);
 
-		    if (hypot(pos1[0] - pos[0], pos1[1] - pos[1]) < 1.5) {
-			fij2xy(gn, pos[0], pos[1], (int) pos1[0], (int) pos1[1], &gn1->gx[j][i], &gn1->gy[j][i]);
-		    } else {
-			gn1->gx[j][i] = NaN;
-			gn1->gy[j][i] = NaN;
-		    }
-		}
-	    }
-	    gn->type = NT_DD;
-	    gridnodes_validate_dd(gn1);
-	    kd_free(kt);
-	}
+                    if (hypot(pos1[0] - pos[0], pos1[1] - pos[1]) < 1.5) {
+                        fij2xy(gn, pos[0], pos[1], (int) pos1[0], (int) pos1[1], &gn1->gx[j][i], &gn1->gy[j][i]);
+                    } else {
+                        gn1->gx[j][i] = NaN;
+                        gn1->gy[j][i] = NaN;
+                    }
+                }
+            }
+            gn->type = NT_DD;
+            gridnodes_validate_dd(gn1);
+            kd_free(kt);
+        }
     }
 
     gn1->validated = 1;         /* an internally generated grid is supposed

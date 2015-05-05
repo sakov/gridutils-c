@@ -1,3 +1,6 @@
+v. 0.54, 5 May 2015
+	-- Introduced gu_setquitfn() to set the quit function externally; 
+	   the previous (internal) version is used as default.
 v. 0.53, 3 Mar 2015
 	-- Corrected the header guard in gridnodes.h
 v. 0.52, 4 Jul 2013
