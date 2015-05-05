@@ -60,6 +60,7 @@ gridaverager.h\
 gridmap.h\
 gridnodes.h\
 gucommon.h\
+guquit.h\
 nan.h\
 poly.h\
 version.h
@@ -152,7 +153,7 @@ install: all installdirs
 	   fi \
 	done
 
-	@for i in gridmap.h gucommon.h gridnodes.h; do \
+	@for i in gridmap.h gucommon.h gridnodes.h guquit.h; do \
 	   echo "  installing $$i"; \
 	   $(INSTALL_DATA) $$i $(includedir); \
 	done
