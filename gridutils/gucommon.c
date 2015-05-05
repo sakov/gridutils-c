@@ -21,22 +21,32 @@
 #include <assert.h>
 #include <errno.h>
 #include "version.h"
+#include "gucommon.h"
 
 #define BUFSIZE 10240
 
-int gu_verbose = 0;
+static void gu_quit_def(char* format, ...);
 
-void gu_quit(char* format, ...)
+int gu_verbose = 0;
+gu_quitfn gu_quit = gu_quit_def;
+
+static void gu_quit_def(char* format, ...)
 {
     va_list args;
 
     fflush(stdout);
-    fprintf(stderr, "\nerror: gridutils: ");
+    fprintf(stderr, "\n  error: gridutils: ");
     va_start(args, format);
     vfprintf(stderr, format, args);
     va_end(args);
+    fprintf(stderr, "\n");
 
     exit(1);
+}
+
+void gu_setquitfn(gu_quitfn quitfn)
+{
+    gu_quit = quitfn;
 }
 
 FILE* gu_fopen(const char* path, const char* mode)

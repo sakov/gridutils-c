@@ -15,13 +15,16 @@
 #if !defined(_GUCOMMON_H)
 #define _GUCOMMON_H
 
+typedef void (*gu_quitfn) (char* format, ...);
+
 extern int gu_verbose;          /* set verbosity from your application */
 extern char* gu_version;
+extern gu_quitfn gu_quit;
 
-void gu_quit(char* format, ...);
 FILE* gu_fopen(const char* path, const char* mode);
 void* gu_alloc2d(int n1, int n2, size_t size);
 void gu_free2d(void* dummy);
 int** gu_readmask(char* fname, int nx, int ny);
+void gu_setquitfn(gu_quitfn quitfn);
 
 #endif

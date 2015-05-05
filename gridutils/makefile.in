@@ -55,15 +55,18 @@ setbathy.c\
 subgrid.c\
 xy2ij.c
 
-HEADERS =\
+HDR_INDENT=\
 gridaverager.h\
 gridmap.h\
 gridnodes.h\
 gucommon.h\
-kdtree.h\
 nan.h\
 poly.h\
 version.h
+
+HDR =\
+$(HDR_INDENT)\
+kdtree.h
 
 LIBOBJECTS =\
 gridmap.o\
@@ -170,7 +173,7 @@ configclean:
 distclean: clean configclean
 
 indent:
-	indent -T FILE -T gridmap -T gridnodes -T gridaverager -T extent -T poly -T subgrid -T NODETYPE -T COORDTYPE -T gridstats -T kdtree -T kdnode $(SRC) $(HEADERS)
+	indent -T FILE -T gridmap -T gridnodes -T gridaverager -T extent -T poly -T subgrid -T NODETYPE -T COORDTYPE -T gridstats -T kdtree -T kdnode $(SRC) $(HDR_INDENT)
 	rm -f *~
 
 dist:
