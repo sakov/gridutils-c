@@ -35,7 +35,7 @@ int merge = 0;
 
 static void version()
 {
-    printf("insertgrid/libgu version %s\n", gu_version);
+    printf("  insertgrid/libgu version %s\n", gu_version);
     exit(0);
 }
 
@@ -44,50 +44,51 @@ static void quit(char* format, ...)
     va_list args;
 
     fflush(stdout);
-    fprintf(stderr, "error: ");
+    fprintf(stderr, "\n  error: ");
     va_start(args, format);
     vfprintf(stderr, format, args);
     va_end(args);
+    fprintf(stderr, "\n");
 
     exit(1);
 }
 
 static void usage()
 {
-    printf("Usage: insertgrid <master grid file> <grid file> <i> <j> [-i {DD|CO|CE}] [-m] [-v]\n");
-    printf("       insertgrid -h\n");
-    printf("       insertgrid -v\n");
-    printf("Try \"insertgrid -h\" for more information\n");
+    printf("  Usage: insertgrid <master grid file> <grid file> <i> <j> [-i {DD|CO|CE}] [-m] [-v]\n");
+    printf("         insertgrid -h\n");
+    printf("         insertgrid -v\n");
+    printf("  Run \"insertgrid -h\" for more information.\n");
 
     exit(0);
 }
 
 static void info()
 {
-    printf("Usage: insertgrid <master grid file> <grid file> <i> <j> [-v]\n");
-    printf("       insertgrid -h\n");
-    printf("       insertgrid -v\n");
-    printf("Where:\n");
-    printf("  <master grid file> -- text file with node coordinates of the grid to be\n");
-    printf("                   modified (see remarks below) (use \"stdin\" or \"-\" for\n");
-    printf("                   standard input)\n");
-    printf("  <grid file>   -- text file with nodes of the grid to be inserted\n");
-    printf("  <i>, <j>      -- indices of location of node (i,j) = (0,0) of the slave\n");
-    printf("                   grid in the master grid\n");
-    printf("  -i {DD|CO|CE} -- grid node type (double density, corner or center)\n");
-    printf("Options:\n");
-    printf("  -h -- print this information\n");
-    printf("  -m -- merge grids (default = insert)\n");
-    printf("  -v -- verbose / version\n");
-    printf("Description:\n");
-    printf("  `insertgrid' reads grid nodes from two files and inserts nodes from one\n");
-    printf("  grid into another grid at specified location in index space.\n");
-    printf("Remarks:\n");
-    printf("  1. The input grid files must contain header describing the node array\n");
-    printf("     dimension: ## <nx> x <ny>\n");
-    printf("  2. After the header, the input files must contain (nx * ny) lines with\n");
-    printf("     X and Y node coordinates.\n");
-    printf("  3. The output grid will be verified if only the node type is specified.\n");
+    printf("  Usage: insertgrid <master grid file> <grid file> <i> <j> [-v]\n");
+    printf("         insertgrid -h\n");
+    printf("         insertgrid -v\n");
+    printf("  Where:\n");
+    printf("    <master grid file> -- text file with node coordinates of the grid to be\n");
+    printf("                     modified (see remarks below) (use \"stdin\" or \"-\" for\n");
+    printf("                     standard input)\n");
+    printf("    <grid file>   -- text file with nodes of the grid to be inserted\n");
+    printf("    <i>, <j>      -- indices of location of node (i,j) = (0,0) of the slave\n");
+    printf("                     grid in the master grid\n");
+    printf("    -i {DD|CO|CE} -- grid node type (double density, corner or center)\n");
+    printf("  Options:\n");
+    printf("    -h -- print this information\n");
+    printf("    -m -- merge grids (default = insert)\n");
+    printf("    -v -- verbose / version\n");
+    printf("  Description:\n");
+    printf("    `insertgrid' reads grid nodes from two files and inserts nodes from one\n");
+    printf("    grid into another grid at specified location in index space.\n");
+    printf("  Remarks:\n");
+    printf("    1. The input grid files must contain header describing the node array\n");
+    printf("       dimension: ## <nx> x <ny>\n");
+    printf("    2. After the header, the input files must contain (nx * ny) lines with\n");
+    printf("       X and Y node coordinates.\n");
+    printf("    3. The output grid will be verified if only the node type is specified.\n");
 
     exit(0);
 }
@@ -130,7 +131,7 @@ static void parse_commandline(int argc, char* argv[], char** fname1, char** fnam
             case 'i':
                 i++;
                 if (i == argc)
-                    quit("no node type found after \"-i\"\n");
+                    quit("no node type found after \"-i\"");
                 if (strcasecmp("dd", argv[i]) == 0)
                     *type = NT_DD;
                 else if (strcasecmp("ce", argv[i]) == 0)
@@ -138,7 +139,7 @@ static void parse_commandline(int argc, char* argv[], char** fname1, char** fnam
                 else if (strcasecmp("co", argv[i]) == 0)
                     *type = NT_COR;
                 else
-                    quit("input node type \"%s\" not recognised\n", argv[i]);
+                    quit("input node type \"%s\" not recognised", argv[i]);
                 break;
             case 'm':
                 merge = 1;

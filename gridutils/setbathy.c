@@ -27,7 +27,7 @@
 
 static void version()
 {
-    printf("setbathy/libgu version %s\n", gu_version);
+    printf("  setbathy/libgu version %s\n", gu_version);
     exit(0);
 }
 
@@ -36,23 +36,24 @@ static void quit(char* format, ...)
     va_list args;
 
     fflush(stdout);
-    fprintf(stderr, "error: ");
+    fprintf(stderr, "\n  error: ");
     va_start(args, format);
     vfprintf(stderr, format, args);
     va_end(args);
+    fprintf(stderr, "\n");
 
     exit(1);
 }
 
 static void usage()
 {
-    printf("Usage: setbathy <file> [-i <imin>:<imax>] [-j <jmin>:<jmax>]\n");
-    printf("                [-d <nx>x<ny>] [-o <line No. offset>] [-v] -z <value>\n");
-    printf("Description: in a text file containing <nx> x <ny> lines with some data\n");
-    printf("  e.g. bathymetry values, `setbathy' sets values in specified index range to\n");
-    printf("  a specified value. The first (or pointed) line of the file should contain\n");
-    printf("  the header \"## <nx> x <ny>\" with grid dimensions; otherwhile one must\n");
-    printf("  enter them by using \"-d\" option.\n");
+    printf("  Usage: setbathy <file> [-i <imin>:<imax>] [-j <jmin>:<jmax>]\n");
+    printf("                  [-d <nx>x<ny>] [-o <line No. offset>] [-v] -z <value>\n");
+    printf("  Description: in a text file containing <nx> x <ny> lines with some data\n");
+    printf("    e.g. bathymetry values, `setbathy' sets values in specified index range to\n");
+    printf("    a specified value. The first (or pointed) line of the file should contain\n");
+    printf("    the header \"## <nx> x <ny>\" with grid dimensions; otherwhile one must\n");
+    printf("    enter them by using \"-d\" option.\n");
 
     exit(0);
 }
@@ -75,21 +76,21 @@ static void parse_commandline(int argc, char* argv[], char** fname, int* imin, i
             case 'i':
                 i++;
                 if (i == argc)
-                    quit("no range found after \"-i\"\n");
+                    quit("no range found after \"-i\"");
                 sscanf(argv[i], "%d:%d", imin, imax);
                 i++;
                 break;
             case 'j':
                 i++;
                 if (i == argc)
-                    quit("no range found after \"-j\"\n");
+                    quit("no range found after \"-j\"");
                 sscanf(argv[i], "%d:%d", jmin, jmax);
                 i++;
                 break;
             case 'd':
                 i++;
                 if (i == argc)
-                    quit("no dimension found after \"-d\"\n");
+                    quit("no dimension found after \"-d\"");
                 if (sscanf(argv[i], "%dx%d", nx, ny) != 2)
                     usage();
                 i++;
@@ -97,7 +98,7 @@ static void parse_commandline(int argc, char* argv[], char** fname, int* imin, i
             case 'o':
                 i++;
                 if (i == argc)
-                    quit("no offset found after \"-d\"\n");
+                    quit("no offset found after \"-d\"");
                 *offset = atoi(argv[i]);
                 i++;
                 break;
@@ -108,7 +109,7 @@ static void parse_commandline(int argc, char* argv[], char** fname, int* imin, i
             case 'z':
                 i++;
                 if (i == argc)
-                    quit("no value found after \"-z\"\n");
+                    quit("no value found after \"-z\"");
                 *z = argv[i];
                 i++;
                 break;
@@ -153,7 +154,7 @@ int main(int argc, char* argv[])
         fprintf(stderr, "## skipping %d lines...\n", offset);
     for (i = 0; i < offset; ++i)
         if (fgets(buf, BUFSIZE, f) == NULL)
-            quit("%s: could not read %d-th line\n", fname, i);
+            quit("%s: could not read %d-th line", fname, i);
         else
             fprintf(stdout, "%s", buf);
 
@@ -164,26 +165,26 @@ int main(int argc, char* argv[])
          * get grid size 
          */
         if (fgets(buf, BUFSIZE, f) == NULL)
-            quit("%s: empty input\n", fname);
+            quit("%s: empty input", fname);
 
         if (sscanf(buf, "## %d x %d", &nx, &ny) != 2)
-            quit("%s: could not read grid size: expected header in \"## %%d x %%d\" format\n or \"-d\" option\n", fname);
+            quit("%s: could not read grid size: expected header in \"## %%d x %%d\" format\n or \"-d\" option", fname);
     }
 
     if (gu_verbose)
         fprintf(stderr, "## %d x %d grid\n", nx, ny);
 
     if (nx < 1)
-        quit("gridnodes_read(): nx = %d: invalid grid size\n", nx);
+        quit("gridnodes_read(): nx = %d: invalid grid size", nx);
     if (ny < 1)
-        quit("gridnodes_read(): ny = %d: invalid grid size\n", ny);
+        quit("gridnodes_read(): ny = %d: invalid grid size", ny);
     if ((double) nx * (double) ny > (double) INT_MAX)
-        quit("gridnodes_read(): grid size (%d x %d) is too big\n", nx, ny);
+        quit("gridnodes_read(): grid size (%d x %d) is too big", nx, ny);
 
     for (j = 0; j < ny; ++j) {
         for (i = 0; i < nx; ++i) {
             if (fgets(buf, BUFSIZE, f) == NULL)
-                quit("%s: could not read %d-th point (%d x %d points expected)\n", fname, j * nx + i + 1, nx, ny);
+                quit("%s: could not read %d-th point (%d x %d points expected)", fname, j * nx + i + 1, nx, ny);
             if (i >= imin && i <= imax && j >= jmin && j <= jmax)
                 fprintf(stdout, "%s\n", z);
             else
