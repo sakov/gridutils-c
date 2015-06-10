@@ -176,26 +176,3 @@ distclean: clean configclean
 indent:
 	indent -T FILE -T gridmap -T gridnodes -T gridaverager -T extent -T poly -T subgrid -T NODETYPE -T COORDTYPE -T gridstats -T kdtree -T kdnode $(SRC) $(HDR_INDENT)
 	rm -f *~
-
-dist:
-	WDIR=`pwd`;\
-	DIR=`basename $$WDIR`;\
-	cp -r $$WDIR /tmp;\
-	cd /tmp/$$DIR;\
-	rm -rf `find /tmp/$$DIR -name CVS`;\
-	if [ -e makefile ] ; then\
-		make distclean;\
-	fi;\
-	/tmp/"$$DIR"/configure;\
-	make standalone;\
-	chmod a+r+x $(PROGRAMS);\
-	mv -f $(PROGRAMS) $(DISTDIR);\
-	make distclean;\
-	cd $(DISTDIR);\
-	mv -f $$DIR".tar.gz" $$DIR".tar.gz.prev";\
-	gzip -f $(PROGRAMS);\
-	cd /tmp;\
-	tar czvf $$DIR".tar.gz" $$DIR;\
-	chmod a+r $$DIR".tar.gz";\
-	mv -f $$DIR".tar.gz" $(DISTDIR)/$$DIR".tar.gz";\
-	rm -rf $$DIR
