@@ -20,14 +20,9 @@
 #
 #############################################################################
 
-# C compiler
-if [ -z "$CC" ]; then
- CC=gcc
-fi
-
 # C compiler flags
 if [ -z "$CFLAGS" ]; then
-CFLAGS="-g -O2 -Wall -pedantic"
+   CFLAGS="-g -O2 -Wall -pedantic"
 fi
 
 # Installation prefix (default is /usr/local)

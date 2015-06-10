@@ -28,7 +28,7 @@
 
 static void version()
 {
-    printf("getnodes/libgu version %s\n", gu_version);
+    printf("  getnodes/libgu version %s\n", gu_version);
     exit(0);
 }
 
@@ -47,56 +47,56 @@ static void quit(char* format, ...)
 
 static void usage()
 {
-    printf("Usage: getnodes <grid file> [-i <node type>] [-o <node type>]\n");
-    printf("                [-m <mask file>] [-x|-y] [-v]\n");
-    printf("Try \"getnodes -h\" for more information\n");
+    printf("  Usage: getnodes <grid file> [-i <node type>] [-o <node type>]\n");
+    printf("                  [-m <mask file>] [-x|-y] [-v]\n");
+    printf("  Run \"getnodes -h\" for more information.\n");
 
     exit(0);
 }
 
 static void info()
 {
-    printf("Usage: getnodes <grid file> [-i <node type>] [-o <node type>]\n");
-    printf("                [-m <mask file>] [-v] [-x|-y]\n");
-    printf("Where:\n");
-    printf("  <grid file> -- text file with node coordinates (see remarks below)\n");
-    printf("    (use \"stdin\" or \"-\" for standard input)\n");
-    printf("Options:\n");
-    printf("  -i <node type> -- input node type\n");
-    printf("  -m <mask file> -- text file with nce1 x nce2 lines containing \"0\" or \"1\"\n");
-    printf("    (use \"stdin\" or \"-\" for standard input)\n");
-    printf("  -o <node type> -- output node type\n");
-    printf("  -p -- tweak a bi- or tri- polar grid to a representation that can be\n");
-    printf("        mapped (xy <-> ij) by using gridmap structure (node coordinates\n");
-    printf("        are assumed to be in degrees)\n");
-    printf("  -v -- verbose / version\n");
-    printf("  -x -- print X coordinates only\n");
-    printf("  -y -- print Y coordinates only\n");
-    printf("Node types:\n");
-    printf("  DD -- double density nodes (default) \n");
-    printf("  CE -- cell center nodes\n");
-    printf("  CO -- cell corner nodes\n");
-    printf("Description:\n");
-    printf("  `getnodes' (i) reads input grid nodes in \"X Y\" format;\n");
-    printf("   (ii) validates them (sets node values for empty cells to NaNs);\n");
-    printf("   (iii) if necessary, converts the nodes to a specified node type;\n");
-    printf("   (iv) prints the requested nodes.\n");
-    printf("Remarks:\n");
-    printf("  1. The grid file must contain header describing the node array dimension:\n");
-    printf("     ## <nx> x <ny>\n");
-    printf("     where for double density nodes nx = nce1 * 2 + 1, ny = nce2 * 2 + 1;\n");
-    printf("     for corner nodes  nx = nce1 + 1, ny = nce2 + 1; and for center nodes\n");
-    printf("     nx = nce1, ny = nce2.\n");
-    printf("  2. After the header, the grid file must contain (nx * ny) lines with X and Y\n");
-    printf("     node coordinates.\n");
-    printf("  3. An empty or commented line in the input grid file as well as NaNs for\n");
-    printf("     node coordinates indicate an invalid node.\n");
-    printf("  4. An optional mask file is a file with nce1 x nce2 lines containing \"1\" for\n");
-    printf("     valid cells and \"0\" for invalid cells.\n");
-    printf("  5. A grid cell is valid if all four corner nodes are valid (not NaNs).\n");
-    printf("     If a cell mask was specified, then a valid corner node must also have\n");
-    printf("     at least one valid neigbour cell.\n");
-    printf("  6. The grid (union of all valid grid cells) must be simply connected.\n");
+    printf("  Usage: getnodes <grid file> [-i <node type>] [-o <node type>]\n");
+    printf("                  [-m <mask file>] [-v] [-x|-y]\n");
+    printf("  Where:\n");
+    printf("    <grid file> -- text file with node coordinates (see remarks below)\n");
+    printf("      (use \"stdin\" or \"-\" for standard input)\n");
+    printf("  Options:\n");
+    printf("    -i <node type> -- input node type\n");
+    printf("    -m <mask file> -- text file with nce1 x nce2 lines containing \"0\" or \"1\"\n");
+    printf("      (use \"stdin\" or \"-\" for standard input)\n");
+    printf("    -o <node type> -- output node type\n");
+    printf("    -p -- tweak a bi- or tri- polar grid to a representation that can be\n");
+    printf("          mapped (xy <-> ij) by using gridmap structure (node coordinates\n");
+    printf("          are assumed to be in degrees)\n");
+    printf("    -v -- verbose / version\n");
+    printf("    -x -- print X coordinates only\n");
+    printf("    -y -- print Y coordinates only\n");
+    printf("  Node types:\n");
+    printf("    DD -- double density nodes (default) \n");
+    printf("    CE -- cell center nodes\n");
+    printf("    CO -- cell corner nodes\n");
+    printf("  Description:\n");
+    printf("    `getnodes' (i) reads input grid nodes in \"X Y\" format;\n");
+    printf("     (ii) validates them (sets node values for empty cells to NaNs);\n");
+    printf("     (iii) if necessary, converts the nodes to a specified node type;\n");
+    printf("     (iv) prints the requested nodes.\n");
+    printf("  Remarks:\n");
+    printf("    1. The grid file must contain header describing the node array dimension:\n");
+    printf("       ## <nx> x <ny>\n");
+    printf("       where for double density nodes nx = nce1 * 2 + 1, ny = nce2 * 2 + 1;\n");
+    printf("       for corner nodes  nx = nce1 + 1, ny = nce2 + 1; and for center nodes\n");
+    printf("       nx = nce1, ny = nce2.\n");
+    printf("    2. After the header, the grid file must contain (nx * ny) lines with X and Y\n");
+    printf("       node coordinates.\n");
+    printf("    3. An empty or commented line in the input grid file as well as NaNs for\n");
+    printf("       node coordinates indicate an invalid node.\n");
+    printf("    4. An optional mask file is a file with nce1 x nce2 lines containing \"1\" for\n");
+    printf("       valid cells and \"0\" for invalid cells.\n");
+    printf("    5. A grid cell is valid if all four corner nodes are valid (not NaNs).\n");
+    printf("       If a cell mask was specified, then a valid corner node must also have\n");
+    printf("       at least one valid neigbour cell.\n");
+    printf("    6. The grid (union of all valid grid cells) must be simply connected.\n");
 
     exit(0);
 }

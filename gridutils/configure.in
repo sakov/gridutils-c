@@ -64,7 +64,7 @@ test "$found_lib" = no && $3
 
 dnl Get the shell variable to override local customisations.
 AC_DEFUN([AC_CUSTOMISE],
-[dnl
+[
     AC_BEFORE([$0], [AC_DEFAULT])
     if test -r CUSTOMISE; then
         . ./CUSTOMISE
@@ -72,9 +72,7 @@ AC_DEFUN([AC_CUSTOMISE],
 ])
 
 AC_CUSTOMISE
-
-dnl Checks for programs.
-AC_PROG_CC
+AC_PROG_CC([clang gcc])
 AC_PROG_INSTALL
 AC_CHECK_PROG(AR, ar, ar, :)
 
@@ -91,8 +89,6 @@ AC_HAVE_LIBRARY(csa,, [AC_MSG_WARN([unable to find library libcsa; you will not 
 
 dnl Checks for header files.
 AC_HEADER_STDC
-
-dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strcasecmp strerror isnan,,AC_MSG_ERROR([unable to find function]))

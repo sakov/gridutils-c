@@ -54,81 +54,83 @@ int indexspace = 0;
 
 static void version()
 {
-    printf("gridbathy/libgu version %s\nlibnn version %s\nlibcsa version %s\n", gu_version, nn_version, csa_version);
+    printf("  gridbathy/libgu version %s\n  libnn version %s\n  libcsa version %s\n", gu_version, nn_version, csa_version);
     exit(0);
 }
 
 static void usage()
 {
-    printf("Usage: gridbathy -b <bathymetry file> -g <grid file>\n");
-    printf("                 [-a {0|1|2|3}]\n");
-    printf("                 [-c <i> <j>]\n");
-    printf("                 [-i <node type>]\n");
-    printf("                 [-m <mask file>]\n");
-    printf("                 [-n <points per edge>]\n");
-    printf("                 [-r <min depth> <max depth>]\n");
-    printf("                 [-v]\n");
-    printf("                 [-x]\n");
-    printf("Try \"gridbathy -h\" for more information\n");
+    printf("  Usage: gridbathy -b <bathymetry file> -g <grid file>\n");
+    printf("                   [-a {0|1|2|3}]\n");
+    printf("                   [-c <i> <j>]\n");
+    printf("                   [-i <node type>]\n");
+    printf("                   [-m <mask file>]\n");
+    printf("                   [-n <points per edge>]\n");
+    printf("                   [-r <min depth> <max depth>]\n");
+    printf("                   [-v]\n");
+    printf("                   [-x]\n");
+    printf("  Run \"gridbathy -h\" for more information.\n");
 
     exit(0);
 }
 
 static void info()
 {
-    printf("Usage: gridbathy -b <bathymetry file> -g <grid file>\n");
-    printf("                 [-a {0|1|2|3}]\n");
-    printf("                 [-c <i> <j>]\n");
-    printf("                 [-i <node type>]\n");
-    printf("                 [-m <mask file>]\n");
-    printf("                 [-n <points per edge>]\n");
-    printf("                 [-r <min depth> <max depth>]\n");
-    printf("                 [-v]\n");
-    printf("                 [-x]\n");
-    printf("Where:\n");
-    printf("  -a 0                 -- use bivariate cubic spline approximation (default)\n");
-    printf("  -a 1                 -- use non-Sibsonian Natural Neighbours interpolation\n");
-    printf("  -a 2                 -- use Sibson Natural Neighbours interpolation\n");
-    printf("  -a 3                 -- use linear interpolation\n");
-    printf("  -a 4                 -- use averaging\n");
-    printf("  -b <data file>       -- three-column (X Y Z) data file (use \"stdin\" or \"-\"\n");
-    printf("                          for standard input)\n");
-    printf("  -c <i> <j>           -- estimate depth for this cell only\n");
-    printf("  -g <grid file>       -- two-column (X Y) grid file (see remarks below) (use\n");
-    printf("                          \"stdin\" or \"-\" for standard input)\n");
-    printf("  -i <node type>       -- grid node type; possible types:\n");
-    printf("                          DD -- double density (default) \n");
-    printf("                          CO -- cell corner\n");
-    printf("  -m <mask file>       -- text file with nce1 x nce2 lines containing \"0\" or \"1\"\n");
-    printf("                          (use \"stdin\" or \"-\" for standard input)\n");
-    printf("  -n <points per edge> -- number of points per cell edge (default = 3)\n");
-    printf("  -r <min> <max>       -- depth range (default = -infty +infty)\n");
-    printf("  -v                   -- verbose / version\n");
-    printf("  -x                   -- conduct interpolation in index space\n");
-    printf("Description:\n");
-    printf(" `gridbathy' interpolates scatterred 2D data into a grid. This is done as\n");
-    printf("  follows. First, for every \"valid\" grid cell (see below for details) the\n");
-    printf("  input data is interpolated to a specified number of regularly distributed\n");
-    printf("  points, using one of the available interpolation methods. Then the points\n");
-    printf("  with invalid values are discarded; the values outside specified range are\n");
-    printf("  replaced by the min/max values; and the final cell value is obtained by\n");
-    printf("  averaging the point values within the cell\n");
-    printf("Remarks:\n");
-    printf("  1. The grid file must contain header describing the node array dimension:\n");
-    printf("     ## <nx> x <ny>\n");
-    printf("     where for double density nodes nx = nce1 * 2 + 1, ny = nce2 * 2 + 1;\n");
-    printf("     for corner nodes  nx = nce1 + 1, ny = nce2 + 1; and for center nodes\n");
-    printf("     nx = nce1, ny = nce2.\n");
-    printf("  2. An empty or commented line in the input grid file as well as NaNs for\n");
-    printf("     node coordinates indicate an invalid node.\n");
-    printf("  3. A grid cell is valid if all corner nodes are valid (not NaNs).\n");
-    printf("  4. The grid (union of all valid grid cells) must be simply connected.\n");
-    printf("  5. The number of interpolations per cell is defined by -n option and is\n");
-    printf("     equal to 3x3 = 9 by default. E.g., \"-n 4\" specifies 4x4 = 16\n");
-    printf("     interpolations per cell; \"-n 1\" is equivalent to interpolation in cell\n");
-    printf("     centers only.\n");
-    printf("  6. An optional mask file is a file with nce1 x nce2 lines containing \"1\" for\n");
-    printf("     valid cells and \"0\" for invalid cells.\n");
+    printf("  Usage: gridbathy -b <bathymetry file> -g <grid file>\n");
+    printf("                   [-a {0|1|2|3}]\n");
+    printf("                   [-c <i> <j>]\n");
+    printf("                   [-i <node type>]\n");
+    printf("                   [-m <mask file>]\n");
+    printf("                   [-n <points per edge>]\n");
+    printf("                   [-r <min depth> <max depth>]\n");
+    printf("                   [-v]\n");
+    printf("                   [-x]\n");
+    printf("  Where:\n");
+    printf("    -a 0                 -- use bivariate cubic spline approximation (default)\n");
+    printf("    -a 1                 -- use non-Sibsonian Natural Neighbours interpolation\n");
+    printf("    -a 2                 -- use Sibson Natural Neighbours interpolation\n");
+    printf("    -a 3                 -- use linear interpolation\n");
+    printf("    -a 4                 -- use averaging\n");
+    printf("    -b <data file>       -- three-column (X Y Z) data file (use \"stdin\" or \"-\"\n");
+    printf("                            for standard input)\n");
+    printf("    -c <i> <j>           -- estimate depth for this cell only\n");
+    printf("    -g <grid file>       -- two-column (X Y) grid file (see remarks below) (use\n");
+    printf("                             \"stdin\" or \"-\" for standard input)\n");
+    printf("    -i <node type>       -- grid node type; possible types:\n");
+    printf("                            DD -- double density (default) \n");
+    printf("                            CO -- cell corner\n");
+    printf("    -m <mask file>       -- text file with nce1 x nce2 lines containing \"0\" or \"1\"\n");
+    printf("                            (use \"stdin\" or \"-\" for standard input)\n");
+    printf("    -n <points per edge> -- number of points per cell edge (default = 3)\n");
+    printf("    -r <min> <max>       -- depth range (default = -infty +infty)\n");
+    printf("    -v                   -- verbose / version\n");
+    printf("    -x                   -- conduct interpolation in index space\n");
+    printf("  Description:\n");
+    printf("    `gridbathy' interpolates scatterred 2D data into a grid. This is done as\n");
+    printf("    follows. First, for every \"valid\" grid cell (see below for details) the\n");
+    printf("    input data is interpolated to a specified number of regularly distributed\n");
+    printf("    points, using one of the available interpolation methods. Then the points\n");
+    printf("    with invalid values are discarded; the values outside specified range are\n");
+    printf("    replaced by the min/max values; and the final cell value is obtained by\n");
+    printf("    averaging the point values within the cell\n");
+    printf("  Remarks:\n");
+    printf("    1. The grid file must contain header describing the node array dimension:\n");
+    printf("       ## <nx> x <ny>\n");
+    printf("       where for double density nodes nx = nce1 * 2 + 1, ny = nce2 * 2 + 1;\n");
+    printf("       for corner nodes  nx = nce1 + 1, ny = nce2 + 1; and for center nodes\n");
+    printf("       nx = nce1, ny = nce2.\n");
+    printf("    2. An empty or commented line in the input grid file as well as NaNs for\n");
+    printf("       node coordinates indicate an invalid node.\n");
+    printf("    3. A grid cell is valid if all corner nodes are valid (not NaNs).\n");
+    printf("    4. The grid (union of all valid grid cells) must be simply connected.\n");
+    printf("    5. The number of interpolations per cell is defined by -n option and is\n");
+    printf("       equal to 3x3 = 9 by default. E.g., \"-n 4\" specifies 4x4 = 16\n");
+    printf("       interpolations per cell; \"-n 1\" is equivalent to interpolation in cell\n");
+    printf("       centers only.\n");
+    printf("    6. An optional mask file is a file with nce1 x nce2 lines containing \"1\" for\n");
+    printf("       valid cells and \"0\" for invalid cells.\n");
+    printf("    7. Although `gridbathy' can not use grids of CE (cell centres) type, such\n");
+    printf("         grids can be converted to CO or DD type with `getnodes'.\n");
 
     exit(0);
 }
@@ -138,10 +140,11 @@ static void quit(char* format, ...)
     va_list args;
 
     fflush(stdout);
-    fprintf(stderr, "error: gridbathy: ");
+    fprintf(stderr, "\n  error: gridbathy: ");
     va_start(args, format);
     vfprintf(stderr, format, args);
     va_end(args);
+    fprintf(stderr, "\n");
 
     exit(1);
 }
@@ -197,34 +200,34 @@ static void parse_commandline(int argc, char* argv[], char** bathyfname, char** 
         case 'a':
             i++;
             if (i >= argc)
-                quit("no interpolation rule number found after -a\n");
+                quit("no interpolation rule number found after -a");
             rule = atoi(argv[i]);
             if (rule < CSA || rule > AVERAGE)
-                quit("invalid interpolation rule number\n");
+                quit("invalid interpolation rule number");
             i++;
             break;
         case 'b':
             i++;
             if (i >= argc)
-                quit("no file name found after -b\n");
+                quit("no file name found after -b");
             *bathyfname = argv[i];
             i++;
             break;
         case 'c':
             i++;
             if (i >= argc)
-                quit("no cell <i> index found after -c\n");
+                quit("no cell <i> index found after -c");
             *ii = atof(argv[i]);
             i++;
             if (i >= argc)
-                quit("no cell <j> index found after -c\n");
+                quit("no cell <j> index found after -c");
             *jj = atof(argv[i]);
             i++;
             break;
         case 'g':
             i++;
             if (i >= argc)
-                quit("no file name found after -g\n");
+                quit("no file name found after -g");
             *gridfname = argv[i];
             i++;
             break;
@@ -234,7 +237,7 @@ static void parse_commandline(int argc, char* argv[], char** bathyfname, char** 
         case 'i':
             i++;
             if (i == argc)
-                quit("no node type found after \"-i\"\n");
+                quit("no node type found after \"-i\"");
             if (strcasecmp("dd", argv[i]) == 0)
                 *nt = NT_DD;
             else if (strcasecmp("ce", argv[i]) == 0)
@@ -242,35 +245,35 @@ static void parse_commandline(int argc, char* argv[], char** bathyfname, char** 
             else if (strcasecmp("co", argv[i]) == 0)
                 *nt = NT_COR;
             else
-                quit("input node type \"%s\" not recognised\n", argv[i]);
+                quit("input node type \"%s\" not recognised", argv[i]);
             i++;
             break;
         case 'm':
             i++;
             if (i == argc)
-                quit("no file name found after \"-m\"\n");
+                quit("no file name found after \"-m\"");
             *maskfname = argv[i];
             i++;
             break;
         case 'n':
             i++;
             if (i >= argc)
-                quit("no points per edge value found after -n\n");
+                quit("no points per edge value found after -n");
             if (!str2int(argv[i], ppe))
-                quit("error: could not read points per edge after -n\n");
+                quit("error: could not read points per edge after -n");
             i++;
             break;
         case 'r':
             i++;
             if (i >= argc)
-                quit("no min depth found after -r\n");
+                quit("no min depth found after -r");
             if (!str2double(argv[i], zmin))
-                quit("error: could not read min depth after -r\n");
+                quit("error: could not read min depth after -r");
             i++;
             if (i >= argc)
-                quit("no max depth found after -r\n");
+                quit("no max depth found after -r");
             if (!str2double(argv[i], zmax))
-                quit("could not read max depth after -r\n");
+                quit("could not read max depth after -r");
             i++;
             break;
         case 'v':
@@ -322,15 +325,15 @@ int main(int argc, char* argv[])
      * sanity check 
      */
     if (bathyfname == NULL)
-        quit("no input bathymetry data specified\n");
+        quit("no input bathymetry data specified");
     if (gridfname == NULL)
-        quit("no input grid data specified\n");
+        quit("no input grid data specified");
     if (ppe <= 0 || ppe > PPE_MAX)
-        quit("number of points per edge specified = %d greater than %d\n", ppe, PPE_MAX);
+        quit("number of points per edge specified = %d greater than %d", ppe, PPE_MAX);
     if (zmin >= zmax)
-        quit("min depth = %.3g > max depth = %.3g\n", zmin, zmax);
+        quit("min depth = %.3g > max depth = %.3g", zmin, zmax);
     if (nt != NT_DD && nt != NT_COR)
-        quit("unsupported node type\n");
+        quit("unsupported node type");
 
     /*
      * read bathymetry 
@@ -338,9 +341,9 @@ int main(int argc, char* argv[])
     points_read(bathyfname, 3, &nbathy, &pbathy);
 
     if (gu_verbose)
-        fprintf(stderr, "## %d input bathymetry values\n", nbathy);
+        fprintf(stderr, "## %d input bathymetry values", nbathy);
     if (nbathy < 3)
-        quit("less than 3 input bathymetry values\n");
+        quit("less than 3 input bathymetry values");
 
     /*
      * read and validate grid 

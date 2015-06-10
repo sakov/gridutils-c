@@ -24,7 +24,7 @@
 
 static void version()
 {
-    printf("getbound/libgu version %s\n", gu_version);
+    printf("  getbound/libgu version %s\n", gu_version);
     exit(0);
 }
 
@@ -43,42 +43,44 @@ static void quit(char* format, ...)
 
 static void usage()
 {
-    printf("Usage: getbound <gridfile> [-c] [-i {DD|CO}] [-r] [-v]\n");
-    printf("Try \"getbound -h\" for more information\n");
+    printf("  Usage: getbound <gridfile> [-c] [-i {DD|CO}] [-r] [-v]\n");
+    printf("  Run \"getbound -h\" for more information.\n");
 
     exit(0);
 }
 
 static void info()
 {
-    printf("Usage: getbound [options] <grid file>\n");
-    printf("Where:\n");
-    printf("  <grid file> -- text file with node coordinates (see remarks below)\n");
-    printf("    (use \"stdin\" or \"-\" for standard input)\n");
-    printf("Options:\n");
-    printf("  -c -- compact the polygon (exclude vertices that lie in between other\n");
-    printf("        vertices)\n");
-    printf("  -i <node type> -- input node type\n");
-    printf("  -r -- Write boundary polygon vertex indices rather than physical coordinates\n");
-    printf("  -v -- Verbose / version\n");
-    printf("Node types:\n");
-    printf("  DD -- double density nodes (default) \n");
-    printf("  CO -- cell corner nodes\n");
-    printf("Description:\n");
-    printf("  `getbound' reads grid nodes from standard input. After that, it builds the\n");
-    printf("   boundary polygon and writes it to standard output\n");
-    printf("Remarks:\n");
-    printf("  1. The grid file must contain header describing the node array dimension:\n");
-    printf("     ## <nx> x <ny>\n");
-    printf("     where for double density nodes nx = nce1 * 2 + 1, ny = nce2 * 2 + 1;\n");
-    printf("     for corner nodes  nx = nce1 + 1, ny = nce2 + 1; and for center nodes\n");
-    printf("     nx = nce1, ny = nce2.\n");
-    printf("  2. After the header, the grid file must contain (nx * ny) lines with X and\n");
-    printf("     Y node coordinates.\n");
-    printf("  3. An empty or commented line in the input grid file as well as NaNs for\n");
-    printf("     node coordinates indicate an invalid node.\n");
-    printf("  4. A grid cell is valid if all corner nodes are valid (not NaNs).\n");
-    printf("  5. The grid (union of all valid grid cells) must be simply connected.\n");
+    printf("  Usage: getbound [options] <grid file>\n");
+    printf("  Where:\n");
+    printf("    <grid file> -- text file with node coordinates (see remarks below)\n");
+    printf("      (use \"stdin\" or \"-\" for standard input)\n");
+    printf("  Options:\n");
+    printf("    -c -- compact the polygon (exclude vertices that lie in between other\n");
+    printf("          vertices)\n");
+    printf("    -i <node type> -- input node type\n");
+    printf("    -r -- write boundary polygon vertex indices rather than physical coordinates\n");
+    printf("    -v -- verbose / version\n");
+    printf("  Node types:\n");
+    printf("    DD -- double density nodes (default) \n");
+    printf("    CO -- cell corner nodes\n");
+    printf("  Description:\n");
+    printf("    `getbound' reads grid nodes from standard input. After that, it builds the\n");
+    printf("     boundary polygon and writes it to standard output\n");
+    printf("  Remarks:\n");
+    printf("    1. The grid file must contain header describing the node array dimension:\n");
+    printf("       ## <nx> x <ny>\n");
+    printf("       where for double density nodes nx = nce1 * 2 + 1, ny = nce2 * 2 + 1;\n");
+    printf("       for corner nodes  nx = nce1 + 1, ny = nce2 + 1; and for center nodes\n");
+    printf("       nx = nce1, ny = nce2.\n");
+    printf("    2. After the header, the grid file must contain (nx * ny) lines with X and\n");
+    printf("       Y node coordinates.\n");
+    printf("    3. An empty or commented line in the input grid file as well as NaNs for\n");
+    printf("       node coordinates indicate an invalid node.\n");
+    printf("    4. A grid cell is valid if all corner nodes are valid (not NaNs).\n");
+    printf("    5. The grid (union of all valid grid cells) must be simply connected.\n");
+    printf("    6. Although `getbound' can not use grids of CE (cell centres) type, such\n");
+    printf("         grids can be converted to CO or DD type with `getnodes'.\n");
 
     exit(0);
 }
