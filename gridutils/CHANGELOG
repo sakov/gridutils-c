@@ -1,5 +1,7 @@
+v. 1.0   25 Sep 2015
+        -- Jumped to v. 1.0.
 v. 0.54, 5 May 2015
-	-- Introduced gu_setquitfn() to set the quit function externally; 
+	-- Introduced gu_setquitfn() to set the quit function externally;
 	   the previous (internal) version is used as default.
 v. 0.53, 3 Mar 2015
 	-- Corrected the header guard in gridnodes.h
@@ -18,7 +20,7 @@ v. 0.48, 25 August 2010
         -- Updated README file and in-build descriptions for some utilities
 v. 0.47, April 2010
         -- Added conversion from grid type CEN to types DD and CO (this involves
-           some extrapolation). Included kdtree.c and kdtree.h by John 
+           some extrapolation). Included kdtree.c and kdtree.h by John
            Tsiombikas in the process of adding this functionality.
 v. 0.46, 18 February 2009
         -- Changed the license for compatibility with GPL. Added the file
