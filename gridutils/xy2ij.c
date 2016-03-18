@@ -20,7 +20,9 @@
 #include <string.h>
 #include <math.h>
 #include <errno.h>
+#include "guquit.h"
 #include "gridmap.h"
+#include "gridkmap.h"
 #include "gucommon.h"
 #include "gridnodes.h"
 
@@ -30,29 +32,17 @@ static int reverse = 0;
 static int force = 0;
 static NODETYPE nt = NT_DD;
 
+typedef int (*mapfn) (void*, double, double, double*, double*);
+
 static void version()
 {
     printf("  xy2ij/libgu version %s\n", gu_version);
     exit(0);
 }
 
-static void quit(char* format, ...)
-{
-    va_list args;
-
-    fflush(stdout);
-    fprintf(stderr, "\n  error: ");
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    va_end(args);
-    fprintf(stderr, "\n");
-
-    exit(1);
-}
-
 static void usage()
 {
-    printf("  Usage: xy2ij [-i {DD|CO}] [-f] [-r] [-v] -g <grid file> -o <point file>\n");
+    printf("  Usage: xy2ij [-i {DD|CO}] [-f] [-k] [-r] [-v] -g <grid file> -o <point file>\n");
     printf("  Run \"xy2ij -h\" for more information.\n");
 
     exit(0);
@@ -69,6 +59,7 @@ static void info()
     printf("  Options:\n");
     printf("    -f -- do not exit with error for points outside grid\n");
     printf("    -i <node type> -- input node type\n");
+    printf("    -k -- use kd-tree for mapping\n");
     printf("    -r -- make convertion from index to physical space\n");
     printf("    -v -- verbose / version\n");
     printf("  Node types:\n");
@@ -93,6 +84,8 @@ static void info()
     printf("       space.\n");
     printf("    5. The grid (union of all valid grid cells) must be simply connected both in\n");
     printf("       physical and index space.\n");
+    printf("       NOTE: from v.1.01.0 this condition can sometimes be bypassed by using\n");
+    printf("       \"-k\" option.\n");
     printf("    6. Although `xy2ij' can not use grids of CE (cell centres) type, such grids\n");
     printf("         can be converted to CO or DD type with `getnodes'.\n");
 
@@ -115,15 +108,15 @@ static void parse_commandline(int argc, char* argv[], char** gfname, char** ofna
             case 'i':
                 i++;
                 if (i == argc)
-                    quit("no node type found after \"-i\"");
+                    gu_quit("no node type found after \"-i\"");
                 if (strcasecmp("dd", argv[i]) == 0)
                     nt = NT_DD;
                 else if (strcasecmp("ce", argv[i]) == 0)
-                    quit("cell centre node type is not supported by xy2ij");
+                    gu_quit("cell centre node type is not supported by xy2ij");
                 else if (strcasecmp("co", argv[i]) == 0)
                     nt = NT_COR;
                 else
-                    quit("input node type \"%s\" not recognised", argv[i]);
+                    gu_quit("input node type \"%s\" not recognised", argv[i]);
                 i++;
                 break;
             case 'f':
@@ -137,6 +130,10 @@ static void parse_commandline(int argc, char* argv[], char** gfname, char** ofna
                 break;
             case 'h':
                 info();
+                break;
+            case 'k':
+                gridmaptype = GRIDMAP_TYPE_KDTREE;
+                i++;
                 break;
             case 'o':
                 i++;
@@ -171,8 +168,10 @@ int main(int argc, char* argv[])
     char* ofname = NULL;
     FILE* of = NULL;
     gridnodes* gn = NULL;
-    gridmap* map = NULL;
+    void* map = NULL;
+    mapfn fn = NULL;
     char buf[BUFSIZE];
+    int count;
 
     parse_commandline(argc, argv, &gfname, &ofname);
     if (nt == NT_DD) {
@@ -189,35 +188,49 @@ int main(int argc, char* argv[])
     /*
      * build grid map 
      */
+    if (gu_verbose)
+        fprintf(stderr, "## parsing the grid into %s...", (gridmaptype == GRIDMAP_TYPE_KDTREE) ? "kd-tree" : "binary tree");
     map = gridmap_build(gridnodes_getnce1(gn), gridnodes_getnce2(gn), gridnodes_getx(gn), gridnodes_gety(gn));
+    if (gu_verbose)
+        fprintf(stderr, "done\n");
 
     if (strcmp(ofname, "stdin") == 0 || strcmp(ofname, "-") == 0)
         of = stdin;
     else
         of = gu_fopen(ofname, "r");
 
+    fn = (reverse) ? (mapfn) gridmap_fij2xy : (mapfn) gridmap_xy2fij;
+
     /*
      * read points to be mapped, do the mapping and write results to stdout 
      */
+    if (gu_verbose)
+        fprintf(stderr, "## mapping the points: ");
+    count = 0;
     while (fgets(buf, BUFSIZE, of) != NULL) {
         char rem[BUFSIZE] = "";
         double xc, yc, ic, jc;
 
         if (sscanf(buf, "%lf %lf %[^\n]", &xc, &yc, rem) >= 2) {
-            if ((!reverse && gridmap_xy2fij(map, xc, yc, &ic, &jc)) || (reverse && gridmap_fij2xy(map, xc, yc, &ic, &jc))) {
+            if (fn(map, xc, yc, &ic, &jc)) {
                 if (!isnan(ic))
                     printf("%.15g %.15g %s\n", ic, jc, rem);
                 else
                     printf("NaN NaN %s\n", rem);
             } else {
                 if (!force)
-                    quit("could not convert (%.15g, %.15g) from %s to %s space", xc, yc, (reverse) ? "index" : "physical", (reverse) ? "physical" : "index");
+                    gu_quit("could not convert (%.15g, %.15g) from %s to %s space", xc, yc, (reverse) ? "index" : "physical", (reverse) ? "physical" : "index");
                 else
                     printf("NaN NaN %s\n", rem);
             }
+            count++;
+            if (gu_verbose && count % 1000 == 0)
+                fprintf(stderr, ".");
         } else
             printf("%s", buf);
     }
+    if (gu_verbose)
+        fprintf(stderr, "\n");
 
     if (of != stdin)
         fclose(of);

@@ -32,19 +32,6 @@ static void version()
     exit(0);
 }
 
-static void quit(char* format, ...)
-{
-    va_list args;
-
-    fflush(stdout);
-    fprintf(stderr, "error: ");
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    va_end(args);
-
-    exit(1);
-}
-
 static void usage()
 {
     printf("  Usage: getnodes <grid file> [-i <node type>] [-o <node type>]\n");
@@ -122,7 +109,7 @@ static void parse_commandline(int argc, char* argv[], char** gridfname, char** m
             case 'i':
                 i++;
                 if (i == argc)
-                    quit("no node type found after \"-i\"\n");
+                    gu_quit("no node type found after \"-i\"\n");
                 if (strcasecmp("dd", argv[i]) == 0)
                     *ntin = NT_DD;
                 else if (strcasecmp("ce", argv[i]) == 0)
@@ -130,7 +117,7 @@ static void parse_commandline(int argc, char* argv[], char** gridfname, char** m
                 else if (strcasecmp("co", argv[i]) == 0)
                     *ntin = NT_COR;
                 else
-                    quit("input node type \"%s\" not recognised\n", argv[i]);
+                    gu_quit("input node type \"%s\" not recognised\n", argv[i]);
                 i++;
                 break;
             case 'h':
@@ -139,14 +126,14 @@ static void parse_commandline(int argc, char* argv[], char** gridfname, char** m
             case 'm':
                 i++;
                 if (i == argc)
-                    quit("no file name found after \"-m\"\n");
+                    gu_quit("no file name found after \"-m\"\n");
                 *maskfname = argv[i];
                 i++;
                 break;
             case 'o':
                 i++;
                 if (i == argc)
-                    quit("no node type found after \"-o\"\n");
+                    gu_quit("no node type found after \"-o\"\n");
                 if (strcasecmp("dd", argv[i]) == 0)
                     *ntout = NT_DD;
                 else if (strcasecmp("ce", argv[i]) == 0)
@@ -154,7 +141,7 @@ static void parse_commandline(int argc, char* argv[], char** gridfname, char** m
                 else if (strcasecmp("co", argv[i]) == 0)
                     *ntout = NT_COR;
                 else
-                    quit("input node type \"%s\" not recognised\n", argv[i]);
+                    gu_quit("input node type \"%s\" not recognised\n", argv[i]);
                 i++;
                 break;
             case 'p':

@@ -31,20 +31,6 @@ static void version()
     exit(0);
 }
 
-static void quit(char* format, ...)
-{
-    va_list args;
-
-    fflush(stdout);
-    fprintf(stderr, "\n  error: ");
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    va_end(args);
-    fprintf(stderr, "\n");
-
-    exit(1);
-}
-
 static void usage()
 {
     printf("  Usage: setbathy <file> [-i <imin>:<imax>] [-j <jmin>:<jmax>]\n");
@@ -76,21 +62,21 @@ static void parse_commandline(int argc, char* argv[], char** fname, int* imin, i
             case 'i':
                 i++;
                 if (i == argc)
-                    quit("no range found after \"-i\"");
+                    gu_quit("no range found after \"-i\"");
                 sscanf(argv[i], "%d:%d", imin, imax);
                 i++;
                 break;
             case 'j':
                 i++;
                 if (i == argc)
-                    quit("no range found after \"-j\"");
+                    gu_quit("no range found after \"-j\"");
                 sscanf(argv[i], "%d:%d", jmin, jmax);
                 i++;
                 break;
             case 'd':
                 i++;
                 if (i == argc)
-                    quit("no dimension found after \"-d\"");
+                    gu_quit("no dimension found after \"-d\"");
                 if (sscanf(argv[i], "%dx%d", nx, ny) != 2)
                     usage();
                 i++;
@@ -98,7 +84,7 @@ static void parse_commandline(int argc, char* argv[], char** fname, int* imin, i
             case 'o':
                 i++;
                 if (i == argc)
-                    quit("no offset found after \"-d\"");
+                    gu_quit("no offset found after \"-d\"");
                 *offset = atoi(argv[i]);
                 i++;
                 break;
@@ -109,7 +95,7 @@ static void parse_commandline(int argc, char* argv[], char** fname, int* imin, i
             case 'z':
                 i++;
                 if (i == argc)
-                    quit("no value found after \"-z\"");
+                    gu_quit("no value found after \"-z\"");
                 *z = argv[i];
                 i++;
                 break;
@@ -154,7 +140,7 @@ int main(int argc, char* argv[])
         fprintf(stderr, "## skipping %d lines...\n", offset);
     for (i = 0; i < offset; ++i)
         if (fgets(buf, BUFSIZE, f) == NULL)
-            quit("%s: could not read %d-th line", fname, i);
+            gu_quit("%s: could not read %d-th line", fname, i);
         else
             fprintf(stdout, "%s", buf);
 
@@ -165,26 +151,26 @@ int main(int argc, char* argv[])
          * get grid size 
          */
         if (fgets(buf, BUFSIZE, f) == NULL)
-            quit("%s: empty input", fname);
+            gu_quit("%s: empty input", fname);
 
         if (sscanf(buf, "## %d x %d", &nx, &ny) != 2)
-            quit("%s: could not read grid size: expected header in \"## %%d x %%d\" format\n or \"-d\" option", fname);
+            gu_quit("%s: could not read grid size: expected header in \"## %%d x %%d\" format\n or \"-d\" option", fname);
     }
 
     if (gu_verbose)
         fprintf(stderr, "## %d x %d grid\n", nx, ny);
 
     if (nx < 1)
-        quit("gridnodes_read(): nx = %d: invalid grid size", nx);
+        gu_quit("gridnodes_read(): nx = %d: invalid grid size", nx);
     if (ny < 1)
-        quit("gridnodes_read(): ny = %d: invalid grid size", ny);
+        gu_quit("gridnodes_read(): ny = %d: invalid grid size", ny);
     if ((double) nx * (double) ny > (double) INT_MAX)
-        quit("gridnodes_read(): grid size (%d x %d) is too big", nx, ny);
+        gu_quit("gridnodes_read(): grid size (%d x %d) is too big", nx, ny);
 
     for (j = 0; j < ny; ++j) {
         for (i = 0; i < nx; ++i) {
             if (fgets(buf, BUFSIZE, f) == NULL)
-                quit("%s: could not read %d-th point (%d x %d points expected)", fname, j * nx + i + 1, nx, ny);
+                gu_quit("%s: could not read %d-th point (%d x %d points expected)", fname, j * nx + i + 1, nx, ny);
             if (i >= imin && i <= imax && j >= jmin && j <= jmax)
                 fprintf(stdout, "%s\n", z);
             else

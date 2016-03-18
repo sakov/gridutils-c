@@ -1,3 +1,7 @@
+v. 1.01.0 16 March 2016
+        -- Added optional xy->ij mapping using kd-tree.
+        -- Fixed memory leak in gridnodes_transform() when converting
+           NT_CEN->NT_COR.
 v. 1.0   25 Sep 2015
         -- Jumped to v. 1.0.
 v. 0.54, 5 May 2015

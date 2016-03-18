@@ -28,19 +28,6 @@ static void version()
     exit(0);
 }
 
-static void quit(char* format, ...)
-{
-    va_list args;
-
-    fflush(stdout);
-    fprintf(stderr, "error: ");
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    va_end(args);
-
-    exit(1);
-}
-
 static void usage()
 {
     printf("  Usage: getbound <gridfile> [-c] [-i {DD|CO}] [-r] [-v]\n");
@@ -110,15 +97,15 @@ static void parse_commandline(int argc, char* argv[], char** fname, int* compact
             case 'i':
                 i++;
                 if (i == argc)
-                    quit("no node type found after \"-i\"\n");
+                    gu_quit("no node type found after \"-i\"\n");
                 if (strcasecmp("dd", argv[i]) == 0)
                     *nt = NT_DD;
                 else if (strcasecmp("ce", argv[i]) == 0)
-                    quit("cell centre node type is not supported by getbound\n");
+                    gu_quit("cell centre node type is not supported by getbound\n");
                 else if (strcasecmp("co", argv[i]) == 0)
                     *nt = NT_COR;
                 else
-                    quit("input node type \"%s\" not recognised\n", argv[i]);
+                    gu_quit("input node type \"%s\" not recognised\n", argv[i]);
                 i++;
                 break;
             case 'h':

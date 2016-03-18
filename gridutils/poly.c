@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include <string.h>
+#include "guquit.h"
 #include "poly.h"
 
 #define POLY_NSTART 4
@@ -104,11 +105,8 @@ static void poly_recalcextent(poly* pl)
  */
 void poly_addpoint(poly* pl, double x, double y)
 {
-    if (isnan(x) || isnan(y)) {
-        fflush(stdout);
-        fprintf(stderr, "error: poly_addpoint(): NaN detected\n");
-        exit(1);
-    }
+    if (isnan(x) || isnan(y))
+        gu_quit("poly_addpoint(): NaN detected");
 
     if (pl->n == pl->nallocated) {
         pl->x = realloc(pl->x, pl->nallocated * sizeof(double) * 2);

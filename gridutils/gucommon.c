@@ -39,7 +39,7 @@ static void gu_quit_def(char* format, ...)
     va_start(args, format);
     vfprintf(stderr, format, args);
     va_end(args);
-    fprintf(stderr, "\n");
+    fprintf(stderr, "\n\n");
 
     exit(1);
 }
@@ -57,7 +57,7 @@ FILE* gu_fopen(const char* path, const char* mode)
     if (f == NULL) {
         int errno_saved = errno;
 
-        gu_quit("%s: could not open for \"%s\" : %s\n", path, mode, strerror(errno_saved));
+        gu_quit("%s: could not open for \"%s\" : %s", path, mode, strerror(errno_saved));
     }
 
     return f;
@@ -78,20 +78,20 @@ void* gu_alloc2d(int n1, int n2, size_t unitsize)
     int i;
 
     if (n1 <= 0 || n2 <= 0)
-        gu_quit("alloc2d(): invalid size (n1 = %d, n2 = %d)\n", n1, n2);
+        gu_quit("alloc2d(): invalid size (n1 = %d, n2 = %d)", n1, n2);
 
     size = n1 * n2;
     if ((p = calloc(size, unitsize)) == NULL) {
         int errno_saved = errno;
 
-        gu_quit("gu_alloc2d(): %s\n", strerror(errno_saved));
+        gu_quit("gu_alloc2d(): %s", strerror(errno_saved));
     }
 
     size = n2 * sizeof(void*);
     if ((pp = malloc(size)) == NULL) {
         int errno_saved = errno;
 
-        gu_quit("gu_alloc2d(): %s\n", strerror(errno_saved));
+        gu_quit("gu_alloc2d(): %s", strerror(errno_saved));
     }
     for (i = 0; i < n2; i++)
         pp[i] = &p[i * n1 * unitsize];
@@ -129,7 +129,7 @@ int** gu_readmask(char* fname, int nx, int ny)
     for (j = 0, count = 0; j < ny; ++j) {
         for (i = 0; i < nx; ++i) {
             if (fgets(buf, BUFSIZE, f) == NULL)
-                gu_quit("%s: could not read %d-th mask value (%d x %d values expected)\n", fname, j * nx + i + 1, nx, ny);
+                gu_quit("%s: could not read %d-th mask value (%d x %d values expected)", fname, j * nx + i + 1, nx, ny);
             buf[strlen(buf) - 1] = 0;
             if (strcmp(buf, "0") == 0)
                 v[j][i] = 0;
@@ -137,7 +137,7 @@ int** gu_readmask(char* fname, int nx, int ny)
                 v[j][i] = 1;
                 count++;
             } else
-                gu_quit("%s: could not interpret %d-th mask value = \"%s\" (expected \"0\" or \"1\"\n", fname, j * nx + i + 1, buf);
+                gu_quit("%s: could not interpret %d-th mask value = \"%s\" (expected \"0\" or \"1\"", fname, j * nx + i + 1, buf);
         }
     }
 

@@ -27,20 +27,6 @@ static void version()
     exit(0);
 }
 
-static void quit(char* format, ...)
-{
-    va_list args;
-
-    fflush(stdout);
-    fprintf(stderr, "\n  error: ");
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    va_end(args);
-    fprintf(stderr, "\n");
-
-    exit(1);
-}
-
 static void usage()
 {
     printf("  Usage: subgrid <grid file> [-i <imin>:<imax>] [-j <jmin>:<jmax>] [-x|-y] [-v]\n");
@@ -93,14 +79,14 @@ static void parse_commandline(int argc, char* argv[], char** fname, COORDTYPE* c
             case 'i':
                 i++;
                 if (i == argc)
-                    quit("no range found after \"-i\"");
+                    gu_quit("no range found after \"-i\"");
                 sscanf(argv[i], "%d:%d", imin, imax);
                 i++;
                 break;
             case 'j':
                 i++;
                 if (i == argc)
-                    quit("no range found after \"-j\"");
+                    gu_quit("no range found after \"-j\"");
                 sscanf(argv[i], "%d:%d", jmin, jmax);
                 i++;
                 break;

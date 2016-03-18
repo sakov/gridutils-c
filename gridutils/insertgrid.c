@@ -39,20 +39,6 @@ static void version()
     exit(0);
 }
 
-static void quit(char* format, ...)
-{
-    va_list args;
-
-    fflush(stdout);
-    fprintf(stderr, "\n  error: ");
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    va_end(args);
-    fprintf(stderr, "\n");
-
-    exit(1);
-}
-
 static void usage()
 {
     printf("  Usage: insertgrid <master grid file> <grid file> <i> <j> [-i {DD|CO|CE}] [-m] [-v]\n");
@@ -131,7 +117,7 @@ static void parse_commandline(int argc, char* argv[], char** fname1, char** fnam
             case 'i':
                 i++;
                 if (i == argc)
-                    quit("no node type found after \"-i\"");
+                    gu_quit("no node type found after \"-i\"");
                 if (strcasecmp("dd", argv[i]) == 0)
                     *type = NT_DD;
                 else if (strcasecmp("ce", argv[i]) == 0)
@@ -139,7 +125,7 @@ static void parse_commandline(int argc, char* argv[], char** fname1, char** fnam
                 else if (strcasecmp("co", argv[i]) == 0)
                     *type = NT_COR;
                 else
-                    quit("input node type \"%s\" not recognised", argv[i]);
+                    gu_quit("input node type \"%s\" not recognised", argv[i]);
                 break;
             case 'm':
                 merge = 1;

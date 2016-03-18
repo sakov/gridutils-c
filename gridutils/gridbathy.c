@@ -135,20 +135,6 @@ static void info()
     exit(0);
 }
 
-static void quit(char* format, ...)
-{
-    va_list args;
-
-    fflush(stdout);
-    fprintf(stderr, "\n  error: gridbathy: ");
-    va_start(args, format);
-    vfprintf(stderr, format, args);
-    va_end(args);
-    fprintf(stderr, "\n");
-
-    exit(1);
-}
-
 static int str2double(char* token, double* value)
 {
     char* end = NULL;
@@ -200,34 +186,34 @@ static void parse_commandline(int argc, char* argv[], char** bathyfname, char** 
         case 'a':
             i++;
             if (i >= argc)
-                quit("no interpolation rule number found after -a");
+                gu_quit("no interpolation rule number found after -a");
             rule = atoi(argv[i]);
             if (rule < CSA || rule > AVERAGE)
-                quit("invalid interpolation rule number");
+                gu_quit("invalid interpolation rule number");
             i++;
             break;
         case 'b':
             i++;
             if (i >= argc)
-                quit("no file name found after -b");
+                gu_quit("no file name found after -b");
             *bathyfname = argv[i];
             i++;
             break;
         case 'c':
             i++;
             if (i >= argc)
-                quit("no cell <i> index found after -c");
+                gu_quit("no cell <i> index found after -c");
             *ii = atof(argv[i]);
             i++;
             if (i >= argc)
-                quit("no cell <j> index found after -c");
+                gu_quit("no cell <j> index found after -c");
             *jj = atof(argv[i]);
             i++;
             break;
         case 'g':
             i++;
             if (i >= argc)
-                quit("no file name found after -g");
+                gu_quit("no file name found after -g");
             *gridfname = argv[i];
             i++;
             break;
@@ -237,7 +223,7 @@ static void parse_commandline(int argc, char* argv[], char** bathyfname, char** 
         case 'i':
             i++;
             if (i == argc)
-                quit("no node type found after \"-i\"");
+                gu_quit("no node type found after \"-i\"");
             if (strcasecmp("dd", argv[i]) == 0)
                 *nt = NT_DD;
             else if (strcasecmp("ce", argv[i]) == 0)
@@ -245,35 +231,35 @@ static void parse_commandline(int argc, char* argv[], char** bathyfname, char** 
             else if (strcasecmp("co", argv[i]) == 0)
                 *nt = NT_COR;
             else
-                quit("input node type \"%s\" not recognised", argv[i]);
+                gu_quit("input node type \"%s\" not recognised", argv[i]);
             i++;
             break;
         case 'm':
             i++;
             if (i == argc)
-                quit("no file name found after \"-m\"");
+                gu_quit("no file name found after \"-m\"");
             *maskfname = argv[i];
             i++;
             break;
         case 'n':
             i++;
             if (i >= argc)
-                quit("no points per edge value found after -n");
+                gu_quit("no points per edge value found after -n");
             if (!str2int(argv[i], ppe))
-                quit("error: could not read points per edge after -n");
+                gu_quit("error: could not read points per edge after -n");
             i++;
             break;
         case 'r':
             i++;
             if (i >= argc)
-                quit("no min depth found after -r");
+                gu_quit("no min depth found after -r");
             if (!str2double(argv[i], zmin))
-                quit("error: could not read min depth after -r");
+                gu_quit("error: could not read min depth after -r");
             i++;
             if (i >= argc)
-                quit("no max depth found after -r");
+                gu_quit("no max depth found after -r");
             if (!str2double(argv[i], zmax))
-                quit("could not read max depth after -r");
+                gu_quit("could not read max depth after -r");
             i++;
             break;
         case 'v':
@@ -325,15 +311,15 @@ int main(int argc, char* argv[])
      * sanity check 
      */
     if (bathyfname == NULL)
-        quit("no input bathymetry data specified");
+        gu_quit("no input bathymetry data specified");
     if (gridfname == NULL)
-        quit("no input grid data specified");
+        gu_quit("no input grid data specified");
     if (ppe <= 0 || ppe > PPE_MAX)
-        quit("number of points per edge specified = %d greater than %d", ppe, PPE_MAX);
+        gu_quit("number of points per edge specified = %d greater than %d", ppe, PPE_MAX);
     if (zmin >= zmax)
-        quit("min depth = %.3g > max depth = %.3g", zmin, zmax);
+        gu_quit("min depth = %.3g > max depth = %.3g", zmin, zmax);
     if (nt != NT_DD && nt != NT_COR)
-        quit("unsupported node type");
+        gu_quit("unsupported node type");
 
     /*
      * read bathymetry 
@@ -343,7 +329,7 @@ int main(int argc, char* argv[])
     if (gu_verbose)
         fprintf(stderr, "## %d input bathymetry values", nbathy);
     if (nbathy < 3)
-        quit("less than 3 input bathymetry values");
+        gu_quit("less than 3 input bathymetry values");
 
     /*
      * read and validate grid 

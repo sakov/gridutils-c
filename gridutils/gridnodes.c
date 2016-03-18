@@ -90,26 +90,26 @@ gridnodes* gridnodes_read(char* fname, NODETYPE type)
      * get grid size 
      */
     if (fgets(buf, BUFSIZE, f) == NULL)
-        gu_quit("%s: empty file\n", fname);
+        gu_quit("%s: empty file", fname);
 
     if (sscanf(buf, "## %d x %d", &gn->nx, &gn->ny) != 2)
-        gu_quit("%s: could not read grid size: expected header in \"## %%d x %%d\" format\n", fname);
+        gu_quit("%s: could not read grid size: expected header in \"## %%d x %%d\" format", fname);
 
     if (gu_verbose)
         fprintf(stderr, "##   %d x %d grid\n", gn->nx, gn->ny);
 
     if (gn->nx < 1)
-        gu_quit("gridnodes_read(): nx = %d: invalid grid size\n", gn->nx);
+        gu_quit("gridnodes_read(): nx = %d: invalid grid size", gn->nx);
     if (gn->ny < 1)
-        gu_quit("gridnodes_read(): ny = %d: invalid grid size\n", gn->ny);
+        gu_quit("gridnodes_read(): ny = %d: invalid grid size", gn->ny);
     if ((double) gn->nx * (double) gn->ny > (double) INT_MAX)
-        gu_quit("gridnodes_read(): grid size (%d x %d) is too big\n", gn->nx, gn->ny);
+        gu_quit("gridnodes_read(): grid size (%d x %d) is too big", gn->nx, gn->ny);
 
     if (type == NT_DD) {
         if (gn->nx % 2 == 0)
-            gu_quit("gridnodes_read(): nx = %d must be odd for double density grid nodes\n", gn->nx);
+            gu_quit("gridnodes_read(): nx = %d must be odd for double density grid nodes", gn->nx);
         if (gn->ny % 2 == 0)
-            gu_quit("gridnodes_read(): ny = %d must be odd for double density grid nodes\n", gn->ny);
+            gu_quit("gridnodes_read(): ny = %d must be odd for double density grid nodes", gn->ny);
     }
 
     /*
@@ -124,7 +124,7 @@ gridnodes* gridnodes_read(char* fname, NODETYPE type)
     for (j = 0, xx = gn->gx[0], yy = gn->gy[0], count = 0; j < gn->ny; ++j) {
         for (i = 0; i < gn->nx; ++i, ++xx, ++yy) {
             if (fgets(buf, BUFSIZE, f) == NULL)
-                gu_quit("%s: could not read %d-th point (%d x %d points expected)\n", fname, j * gn->nx + i + 1, gn->nx, gn->ny);
+                gu_quit("%s: could not read %d-th point (%d x %d points expected)", fname, j * gn->nx + i + 1, gn->nx, gn->ny);
             if (sscanf(buf, "%lf %lf", xx, yy) != 2) {
                 *xx = NaN;
                 *yy = NaN;
@@ -573,8 +573,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             /*
              * this may take a while 
              */
-            for (i = 0; i < gn1->nx; ++i)
-                for (j = 0; j < gn1->ny; ++j)
+            for (j = 0; j < gn1->ny; ++j)
+                for (i = 0; i < gn1->nx; ++i)
                     gridmap_fij2xy(gm, i + 0.5, j + 0.5, &gn1->gx[j][i], &gn1->gy[j][i]);
 
             gridmap_destroy(gm);
@@ -589,8 +589,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             /*
              * this may take a while 
              */
-            for (i = 0; i < gn1->nx; ++i)
-                for (j = 0; j < gn1->ny; ++j)
+            for (j = 0; j < gn1->ny; ++j)
+                for (i = 0; i < gn1->nx; ++i)
                     gridmap_fij2xy(gm, i / 2.0, j / 2.0, &gn1->gx[j][i], &gn1->gy[j][i]);
 
             gridmap_destroy(gm);
@@ -607,8 +607,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             /*
              * put positions of the cells formed by cell centers into kd tree
              */
-            for (i = 0; i < gn->nx - 1; ++i) {
-                for (j = 0; j < gn->ny - 1; ++j) {
+            for (j = 0; j < gn->ny - 1; ++j) {
+                for (i = 0; i < gn->nx - 1; ++i) {
                     if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
                         double pos[2];
 
@@ -624,16 +624,16 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
              * if it is in a neighbour cell - then extrapolate the cell
              * position using the mapping of this cell
              */
-            for (i = 0; i < gn1->nx; ++i) {
-                for (j = 0; j < gn1->ny; ++j) {
+            for (j = 0; j < gn1->ny; ++j) {
+                for (i = 0; i < gn1->nx; ++i) {
                     double pos[2];
-                    double pos1[2];
-                    kdres* nearest = NULL;
+                    double* pos1;
+                    kdnode* nearest = NULL;
 
                     pos[0] = (double) i - 0.5;
                     pos[1] = (double) j - 0.5;
                     nearest = kd_nearest(kt, pos);
-                    kd_res_item(nearest, pos1);
+                    pos1 = kdnode_pos(nearest);
 
                     if (hypot(pos1[0] - pos[0], pos1[1] - pos[1]) < 1.5) {
                         fij2xy(gn, pos[0], pos[1], (int) pos1[0], (int) pos1[1], &gn1->gx[j][i], &gn1->gy[j][i]);
@@ -657,8 +657,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             /*
              * put positions of the cells formed by cell centers into kd tree
              */
-            for (i = 0; i < gn->nx - 1; ++i) {
-                for (j = 0; j < gn->ny - 1; ++j) {
+            for (j = 0; j < gn->ny - 1; ++j) {
+                for (i = 0; i < gn->nx - 1; ++i) {
                     if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
                         double pos[2];
 
@@ -674,16 +674,16 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
              * if it is in a neighbour cell - then extrapolate the cell
              * position using the mapping of this cell
              */
-            for (i = 0; i < gn1->nx; ++i) {
-                for (j = 0; j < gn1->ny; ++j) {
+            for (j = 0; j < gn1->ny; ++j) {
+                for (i = 0; i < gn1->nx; ++i) {
                     double pos[2];
-                    double pos1[2];
-                    kdres* nearest = NULL;
+                    double* pos1;
+                    struct kdnode* nearest = NULL;
 
                     pos[0] = (double) i / 2.0 - 0.5;
                     pos[1] = (double) j / 2.0 - 0.5;
                     nearest = kd_nearest(kt, pos);
-                    kd_res_item(nearest, pos1);
+                    pos1 = kdnode_pos(nearest);
 
                     if (hypot(pos1[0] - pos[0], pos1[1] - pos[1]) < 1.5) {
                         fij2xy(gn, pos[0], pos[1], (int) pos1[0], (int) pos1[1], &gn1->gx[j][i], &gn1->gy[j][i]);
@@ -762,9 +762,9 @@ void gridnodes_applymask(gridnodes* gn, int** mask)
             }
         }
     } else if (gn->type == NT_COR)
-        gu_quit("gridnodes_applymask(): applying mask to nodes of type \"%s\" is not supported\n", nodetype2str[NT_COR]);
+        gu_quit("gridnodes_applymask(): applying mask to nodes of type \"%s\" is not supported", nodetype2str[NT_COR]);
     else if (gn->type == NT_NONE)
-        gu_quit("gridnodes_applymask(): nodes type not specified\n");
+        gu_quit("gridnodes_applymask(): nodes type not specified");
 }
 
 /* Writes grid nodes into a file.
@@ -979,7 +979,7 @@ int gridnodes_getnce1(gridnodes* gn)
     else if (gn->type == NT_CEN)
         return gn->nx;
     else
-        gu_quit("gridnodes_getnce1(): node type not specified\n");
+        gu_quit("gridnodes_getnce1(): node type not specified");
 
     return 0;
 }
@@ -993,7 +993,7 @@ int gridnodes_getnce2(gridnodes* gn)
     else if (gn->type == NT_CEN)
         return gn->ny;
     else
-        gu_quit("gridnodes_getnce2(): node type not specified\n");
+        gu_quit("gridnodes_getnce2(): node type not specified");
 
     return 0;
 }

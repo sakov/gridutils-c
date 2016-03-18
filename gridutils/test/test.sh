@@ -64,6 +64,27 @@ echo ""
 ../getnodes gridpoints_DD.txt -x | sed '1,1d' > x.txt
 ../getnodes gridpoints_DD.txt -y | sed '1,1d' > y.txt
 
+echo "7. As p.6, using mapping via kd-tree:"
+echo ""
+echo -n '   513252.3881 5186890.274 -> '
+echo "513252.3881 5186890.274" | ../xy2ij -g gridpoints_DD.txt -o stdin -k
+echo "   and back:"
+echo -n "   (index) "
+echo "513252.3881 5186890.274" | ../xy2ij -g gridpoints_DD.txt -o stdin -k |tr -d "\n"
+echo -n '-> '
+echo "513252.3881 5186890.274" | ../xy2ij -g gridpoints_DD.txt -o stdin -k | ../xy2ij -g gridpoints_DD.txt -o stdin -r
+echo ""
+echo -n '   (index) 20.5 10.5 -> '
+echo "20.5 10.5" | ../xy2ij -g gridpoints_DD.txt -o stdin -r -k
+echo "   and back:"
+echo -n "   "`echo "20.5 10.5" | ../xy2ij -g gridpoints_DD.txt -o stdin -r -k |tr -d "\n"`
+echo -n '-> '
+echo "20.5 10.5" | ../xy2ij -g gridpoints_DD.txt -o stdin -r -k | ../xy2ij -g gridpoints_DD.txt -o stdin
+echo ""
+
+../getnodes gridpoints_DD.txt -x | sed '1,1d' > x.txt
+../getnodes gridpoints_DD.txt -y | sed '1,1d' > y.txt
+
 if [ ! -x ../gridbathy ]
 then
     echo "no ../gridbathy found"
@@ -71,22 +92,22 @@ then
     exit 0
 fi
 
-echo -n "7. Interpolating bathymetry with bivariate cubic spline..."
+echo -n "8. Interpolating bathymetry with bivariate cubic spline..."
 ../gridbathy -b bathy.txt -g gridpoints_DD.txt > bathy-cs.txt
 echo "done"
 echo ""
 
-echo -n "8. Interpolating bathymetry with linear interpolation..."
+echo -n "9. Interpolating bathymetry with linear interpolation..."
 ../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 3 > bathy-l.txt
 echo "done"
 echo ""
 
-echo -n "9. Interpolating bathymetry with Natural Neighbours interpolation..."
+echo -n "10. Interpolating bathymetry with Natural Neighbours interpolation..."
 ../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 2 > bathy-nn.txt
 echo "done"
 echo ""
 
-echo -n "10. Interpolating bathymetry with Non-Sibsonian NN interpolation..."
+echo -n "11. Interpolating bathymetry with Non-Sibsonian NN interpolation..."
 ../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 1 > bathy-ns.txt
 echo "done"
 echo ""

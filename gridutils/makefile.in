@@ -45,6 +45,7 @@ getnodes.c\
 gridaverager.c\
 gridbathy.c\
 gridmap.c\
+gridkmap.c\
 gridnodes.c\
 gucommon.c\
 insertgrid.c\
@@ -56,6 +57,8 @@ xy2ij.c
 HDR_INDENT=\
 gridaverager.h\
 gridmap.h\
+gridbmap.h\
+gridkmap.h\
 gridnodes.h\
 gucommon.h\
 guquit.h\
@@ -69,6 +72,8 @@ kdtree.h
 
 LIBOBJECTS =\
 gridmap.o\
+gridbmap.o\
+gridkmap.o\
 gridnodes.o\
 gucommon.o\
 kdtree.o\
@@ -76,6 +81,8 @@ poly.o
 
 SHLIBOBJECTS =\
 gridmap.t\
+gridbmap.t\
+gridkmap.t\
 gridnodes.t\
 gucommon.t\
 kdtree.t\
@@ -172,5 +179,5 @@ configclean:
 distclean: clean configclean
 
 indent:
-	indent -T FILE -T gridmap -T gridnodes -T gridaverager -T extent -T poly -T subgrid -T NODETYPE -T COORDTYPE -T gridstats -T kdtree -T kdnode $(SRC) $(HDR_INDENT)
+	indent -T FILE -T gridmap -T gridbmap -T gridkmap -T gridnodes -T gridaverager -T extent -T poly -T subgrid -T NODETYPE -T COORDTYPE -T gridstats -T kdtree -T kdnode $(SRC) $(HDR_INDENT)
 	rm -f *~
