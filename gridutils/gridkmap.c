@@ -33,7 +33,7 @@ struct gridkmap {
 gridkmap* gridkmap_build(int nce1, int nce2, double** gx, double** gy)
 {
     gridkmap* gm = malloc(sizeof(gridkmap));
-    int i, j;
+    int i, j, ii, jj;
 
     gm->nce1 = nce1;
     gm->nce2 = nce2;
@@ -42,8 +42,8 @@ gridkmap* gridkmap_build(int nce1, int nce2, double** gx, double** gy)
 
     gm->kd = kd_create(2);
 
-    for (j = 0; j <= nce2; ++j) {
-        for (i = 0; i <= nce1; ++i) {
+    for (jj = 0, j = nce2 / 2; jj <= nce2; ++jj, j = (j + 1) % (nce2 + 1)) {
+        for (ii = 0, i = nce1 / 2; ii <= nce1; ++ii, i = (i + 1) % (nce1 + 1)) {
             double pos[2];
 
             pos[0] = gx[j][i];

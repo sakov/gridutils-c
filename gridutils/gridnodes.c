@@ -264,6 +264,7 @@ static void gridnodes_validate_dd(gridnodes* gn)
     int count;
     int i, j;
 
+    count = 0; /* the valid nodes marked as bad */
     /*
      * corner nodes:
      *
@@ -272,6 +273,8 @@ static void gridnodes_validate_dd(gridnodes* gn)
      */
     for (j = 0; j < ny; j += 2) {
         for (i = 0; i < nx; i += 2) {
+            if (isnan(x[j][i]))
+                continue;
             if (j > 0 && i > 0 && !isnan(x[j - 2][i - 2]) && !isnan(x[j - 2][i]) && !isnan(x[j][i - 2]))
                 continue;
             if (j + 2 < ny && i > 0 && !isnan(x[j + 2][i - 2]) && !isnan(x[j + 2][i]) && !isnan(x[j][i - 2]))
@@ -282,6 +285,7 @@ static void gridnodes_validate_dd(gridnodes* gn)
                 continue;
             x[j][i] = NaN;
             y[j][i] = NaN;
+            count++;
         }
     }
 
@@ -301,6 +305,7 @@ static void gridnodes_validate_dd(gridnodes* gn)
             if (isnan(x[j - 1][i - 1]) || isnan(x[j - 1][i + 1]) || isnan(x[j + 1][i - 1]) || isnan(x[j + 1][i + 1])) {
                 x[j][i] = NaN;
                 y[j][i] = NaN;
+                count++;
             }
         }
     }
@@ -318,6 +323,7 @@ static void gridnodes_validate_dd(gridnodes* gn)
             if ((i - 1 >= 0 && isnan(x[j][i - 1])) || (i + 1 < nx && isnan(x[j][i + 1]))) {
                 x[j][i] = NaN;
                 y[j][i] = NaN;
+                count++;
             }
         }
     }
@@ -328,10 +334,13 @@ static void gridnodes_validate_dd(gridnodes* gn)
             if ((j - 1 >= 0 && isnan(x[j - 1][i])) || (j + 1 < ny && isnan(x[j + 1][i]))) {
                 x[j][i] = NaN;
                 y[j][i] = NaN;
+                count++;
             }
         }
     }
 
+    if (gu_verbose)
+        fprintf(stderr, "##   %d valid nodes marked as invalid (%.1f%%)\n", count, count * 100.0 / (double) nx / (double) ny);
     /*
      * count valid cells 
      */
@@ -340,7 +349,7 @@ static void gridnodes_validate_dd(gridnodes* gn)
             for (i = 1; i < nx; i += 2)
                 if (!isnan(x[j][i]))
                     count++;
-        fprintf(stderr, "##   %d valid cells (%.1f%%)\n", count, count * 100.0 / (nx / 2) / (ny / 2));
+        fprintf(stderr, "##   %d valid cells (%.1f%%)\n", count, count * 100.0 / (double) (nx / 2) / (double) (ny / 2));
     }
 }
 
@@ -598,6 +607,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
     } else if (gn->type == NT_CEN) {
         if (type == NT_COR) {
             kdtree* kt = kd_create(2);  /* 2 dimensions */
+            int ii, jj;
 
             gn1->nx = gn->nx + 1;
             gn1->ny = gn->ny + 1;
@@ -605,10 +615,11 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
 
             /*
-             * put positions of the cells formed by cell centers into kd tree
+             * put positions of the cells formed by cell centers into kd tree;
+             * start from the grid centre
              */
-            for (j = 0; j < gn->ny - 1; ++j) {
-                for (i = 0; i < gn->nx - 1; ++i) {
+            for (jj = 0, j = gn->ny / 2; jj < gn->ny - 1; ++jj, j = (j + 1) % (gn->ny - 1)) {
+                for (ii = 0, i = gn->nx / 2; ii < gn->nx - 1; ++ii, i = (i + 1) % (gn->nx - 1)) {
                     if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
                         double pos[2];
 
@@ -643,11 +654,12 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
                     }
                 }
             }
-            gn->type = NT_COR;
+            gn1->type = NT_COR;
             gridnodes_validate_cor(gn1);
             kd_free(kt);
         } else if (type == NT_DD) {
             kdtree* kt = kd_create(2);  /* 2 dimensions */
+            int ii, jj;
 
             gn1->nx = gn->nx * 2 + 1;
             gn1->ny = gn->ny * 2 + 1;
@@ -655,10 +667,11 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
 
             /*
-             * put positions of the cells formed by cell centers into kd tree
+             * put positions of the cells formed by cell centers into kd tree;
+             * start from the grid centre
              */
-            for (j = 0; j < gn->ny - 1; ++j) {
-                for (i = 0; i < gn->nx - 1; ++i) {
+            for (jj = 0, j = gn->ny / 2; jj < gn->ny - 1; ++jj, j = (j + 1) % (gn->ny - 1)) {
+                for (ii = 0, i = gn->nx / 2; ii < gn->nx - 1; ++ii, i = (i + 1) % (gn->nx - 1)) {
                     if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
                         double pos[2];
 
@@ -693,7 +706,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
                     }
                 }
             }
-            gn->type = NT_DD;
+            gn1->type = NT_DD;
             gridnodes_validate_dd(gn1);
             kd_free(kt);
         }

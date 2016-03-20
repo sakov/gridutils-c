@@ -13,7 +13,7 @@ echo ""
 
 echo "1. Validating and printing some stats:"
 echo ""
-../getnodes gridpoints_DD.txt -i DD -v > /dev/null
+../getnodes gridpoints_DD-raw.txt -i DD -o DD -v > gridpoints_DD.txt
 echo ""
 
 echo "2. Testing conversion between the grid types:"
@@ -25,6 +25,9 @@ echo -n "  Extracting centre nodes from corner nodes..."
 echo "done"
 echo -n "  Recovering corner nodes from centre nodes..."
 ../getnodes gridpoints_CE.txt -i CE -o CO > gridpoints_CO2.txt
+echo "done"
+echo -n "  Recovering double-density nodes from centre nodes..."
+../getnodes gridpoints_CE.txt -i CE -o DD > gridpoints_DD2.txt
 echo "done"
 echo ""
 
@@ -113,6 +116,8 @@ echo "done"
 echo ""
 
 echo "to visualise grid, in matlab run \"viewgrid('gridpoints_CO.txt')\""
+echo "to draw one grid over another, first run \"viewgrid('<grid 1 fname>),\""
+echo "  and then \"viewgrid('<grid 2 fname>', <figure #>)\""
 echo "to visualise grid boundary, in matlab run \"viewbound('bound.txt')\""
 echo "  (also \"viewbound('bound-r.txt')\", \"viewbound('bound-c-r.txt')\")"
 echo "to visualise interpolated bathymetry, in matlab run \"viewbathy\""

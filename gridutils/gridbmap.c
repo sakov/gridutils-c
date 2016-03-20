@@ -53,9 +53,9 @@ struct gridbmap {
     int nce1;                   /* number of cells in e1 direction */
     int nce2;                   /* number of cells in e2 direction */
     double** gx;                /* reference to array of X coords
-                                 * [nce2+1][nce2+1] */
+                                 * [nce1+1][nce2+1] */
     double** gy;                /* reference to array of Y coords
-                                 * [nce2+1][nce2+1] */
+                                 * [nce1+1][nce2+1] */
 };
 
 /* Creates a subgrid.

@@ -1,9 +1,4 @@
-function vg(fname)
-  if (~exist(fname, 'file'))
-    fprintf(1, '"%s" not found\n', fname);
-    return
-  end
-  
+function vg(fname, f)
   [nx, ny, x, y] = fload(fname);
 
   xmin = min(x);
@@ -18,16 +13,26 @@ function vg(fname)
   ymin = ymin - diff;
   ymax = ymax + diff;
   
-  figure;
-  hold on;
-  axis([xmin xmax ymin ymax]);
-  axis image;
-  
-  fill([xmin xmin xmax xmax], [ymin ymax ymax ymin], [0.7 0.7 0.7]);
+  if ~exist('f', 'var')
+      figure;
+      ht = title(fname);
+      set(ht, 'interpreter', 'none');
+      hold on;
+      axis([xmin xmax ymin ymax]);
+      axis image;
+      
+      fill([xmin xmin xmax xmax], [ymin ymax ymax ymin], [0.7 0.7 0.7]);
+      col = [0 0 0];
+      alpha = 1;
+  else
+      figure(f);
+      col = [1 0 0];
+      alpha = 0.2;
+  end
   
   ix = 1;
-  for (j = 1:ny-1)
-    for (i = 1:nx-1)
+  for j = 1:ny-1
+    for i = 1:nx-1
       i1 = ix;
       i2 = ix + 1;
       i3 = ix + nx + 1;
@@ -36,18 +41,16 @@ function vg(fname)
       yy = [y(i1) y(i2) y(i3) y(i4)];
       sum = x(i1) + x(i2) + x(i3) + x(i4);
       if ~isnan(sum)
-	fill(xx, yy, [1 1 1]);
+	fill(xx, yy, [1 1 1], 'edgecolor', col, 'facealpha', alpha);
       end
       ix = ix + 1;
     end
     ix = ix + 1;
   end
 
-  %  plot(x, y, '.');
-
   return
 
-function [nx, ny, x,y] = fload(fname);
+function [nx, ny, x, y] = fload(fname);
   f = fopen(fname);
   if (f < 0)
     return;
@@ -59,52 +62,15 @@ function [nx, ny, x,y] = fload(fname);
   y = [];
   
   str = fgetl(f);
-  if (str >= 0)
-    seps = char([32,92]);
-    [tmp,str] = strtok(str, seps);
-    if (strcmpi(tmp, '##'))
-      [nxstr,str] = strtok(str, seps);
-      [tmp,str] = strtok(str, seps);
-      if (strcmpi(tmp, 'x'))
-	nystr = strtok(str, seps);
-	nx = sscanf(nxstr, '%d');
-	ny = sscanf(nystr, '%d');
-      end
-    end
-  end
-  
-  fprintf(1, '  reading "%s": %d x %d ... ', fname, nx, ny);
+  [n, count] = sscanf(str, '## %d x %d');
 
-  if (nx > 0 & ny > 0)
-    % allocate memory -- is there a better way?
-    n = nx * ny;
-    x = linspace(0, 0, n);
-    y = linspace(0, 0, n);
-
-    str = fgetl(f);
-    i = 1;
-    while (str >= 0)
-      if (str(1) ~= '#')
-	xy = sscanf(str, '%f');
-	if (length(xy) >= 2)
-	  x(i) = xy(1);
-	  y(i) = xy(2);
-	else
-	  x(i) = NaN;
-	  y(i) = NaN;
-	end
-      else
-	x(i) = NaN;
-	y(i) = NaN;
-      end
-      i = i + 1;
-      if (i > n)
-	break;
-      end
-      str = fgetl(f);
-    end
+  if (count == 2 & n(1) > 0 & n(2) > 0)
+    nx = n(1);
+    ny = n(2);
+    [xy] = fscanf(f, '%f', [2,inf]);
+    x = xy(1,:);
+    y = xy(2,:);
   end
   
   fclose(f);
-  fprintf(1, 'ok\n');
   return
