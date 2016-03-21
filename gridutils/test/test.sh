@@ -88,32 +88,31 @@ echo ""
 ../getnodes gridpoints_DD.txt -x | sed '1,1d' > x.txt
 ../getnodes gridpoints_DD.txt -y | sed '1,1d' > y.txt
 
-if [ ! -x ../gridbathy ]
+if [ -x ../gridbathy ]
 then
+    echo -n "8. Interpolating bathymetry with bivariate cubic spline..."
+    ../gridbathy -b bathy.txt -g gridpoints_DD.txt > bathy-cs.txt
+    echo "done"
+    echo ""
+
+    echo -n "9. Interpolating bathymetry with linear interpolation..."
+    ../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 3 > bathy-l.txt
+    echo "done"
+    echo ""
+
+    echo -n "10. Interpolating bathymetry with Natural Neighbours interpolation..."
+    ../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 2 > bathy-nn.txt
+    echo "done"
+    echo ""
+
+    echo -n "11. Interpolating bathymetry with Non-Sibsonian NN interpolation..."
+    ../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 1 > bathy-ns.txt
+    echo "done"
+    echo ""
+else
     echo "no ../gridbathy found"
     echo "omitting tests for gridbathy"
-    exit 0
 fi
-
-echo -n "8. Interpolating bathymetry with bivariate cubic spline..."
-../gridbathy -b bathy.txt -g gridpoints_DD.txt > bathy-cs.txt
-echo "done"
-echo ""
-
-echo -n "9. Interpolating bathymetry with linear interpolation..."
-../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 3 > bathy-l.txt
-echo "done"
-echo ""
-
-echo -n "10. Interpolating bathymetry with Natural Neighbours interpolation..."
-../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 2 > bathy-nn.txt
-echo "done"
-echo ""
-
-echo -n "11. Interpolating bathymetry with Non-Sibsonian NN interpolation..."
-../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 1 > bathy-ns.txt
-echo "done"
-echo ""
 
 echo "to visualise grid, in matlab run \"viewgrid('gridpoints_CO.txt')\""
 echo "to draw one grid over another, first run \"viewgrid('<grid 1 fname>),\""
