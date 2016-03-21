@@ -1,4 +1,4 @@
-function vg(fname, f)
+function viewgrid(fname, f)
   [nx, ny, x, y] = fload(fname);
 
   xmin = min(x);

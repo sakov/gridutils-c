@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 if [ ! -x ../getnodes ]
 then
@@ -7,14 +8,14 @@ then
     exit 1
 fi
 
-echo ""
+echo
 echo "input double density grid: gridnodes.txt"
-echo ""
+echo
 
 echo "1. Validating and printing some stats:"
-echo ""
+echo
 ../getnodes gridpoints_DD-raw.txt -i DD -o DD -v > gridpoints_DD.txt
-echo ""
+echo
 
 echo "2. Testing conversion between the grid types:"
 echo -n "  Extracting cell corner nodes from a double-density grid..."
@@ -29,25 +30,25 @@ echo "done"
 echo -n "  Recovering double-density nodes from centre nodes..."
 ../getnodes gridpoints_CE.txt -i CE -o DD > gridpoints_DD2.txt
 echo "done"
-echo ""
+echo
 
 echo -n "3. Getting the boundary and writing it to bound.txt..."
 ../getbound gridpoints_DD.txt > bound.txt
 echo "done"
-echo ""
+echo
 
 echo -n "4. Getting the boundary in index space and writing it to bound-r.txt..."
 ../getbound gridpoints_DD.txt -r > bound-r.txt
 echo "done"
-echo ""
+echo
 
 echo -n "5. As above, with compacting, writing to bound-c-r.txt..."
 ../getbound gridpoints_DD.txt -c -r > bound-c-r.txt
 echo "done"
-echo ""
+echo
 
 echo "6. Converting a few points to and from index space:"
-echo ""
+echo
 echo -n '   513252.3881 5186890.274 -> '
 echo "513252.3881 5186890.274" | ../xy2ij -g gridpoints_DD.txt -o stdin
 echo "   and back:"
@@ -55,20 +56,20 @@ echo -n "   (index) "
 echo "513252.3881 5186890.274" | ../xy2ij -g gridpoints_DD.txt -o stdin |tr -d "\n"
 echo -n '-> '
 echo "513252.3881 5186890.274" | ../xy2ij -g gridpoints_DD.txt -o stdin | ../xy2ij -g gridpoints_DD.txt -o stdin -r
-echo ""
+echo
 echo -n '   (index) 20.5 10.5 -> '
 echo "20.5 10.5" | ../xy2ij -g gridpoints_DD.txt -o stdin -r
 echo "   and back:"
 echo -n "   "`echo "20.5 10.5" | ../xy2ij -g gridpoints_DD.txt -o stdin -r |tr -d "\n"`
 echo -n '-> '
 echo "20.5 10.5" | ../xy2ij -g gridpoints_DD.txt -o stdin -r | ../xy2ij -g gridpoints_DD.txt -o stdin
-echo ""
+echo
 
 ../getnodes gridpoints_DD.txt -x | sed '1,1d' > x.txt
 ../getnodes gridpoints_DD.txt -y | sed '1,1d' > y.txt
 
 echo "7. As p.6, using mapping via kd-tree:"
-echo ""
+echo
 echo -n '   513252.3881 5186890.274 -> '
 echo "513252.3881 5186890.274" | ../xy2ij -g gridpoints_DD.txt -o stdin -k
 echo "   and back:"
@@ -76,14 +77,14 @@ echo -n "   (index) "
 echo "513252.3881 5186890.274" | ../xy2ij -g gridpoints_DD.txt -o stdin -k |tr -d "\n"
 echo -n '-> '
 echo "513252.3881 5186890.274" | ../xy2ij -g gridpoints_DD.txt -o stdin -k | ../xy2ij -g gridpoints_DD.txt -o stdin -r
-echo ""
+echo
 echo -n '   (index) 20.5 10.5 -> '
 echo "20.5 10.5" | ../xy2ij -g gridpoints_DD.txt -o stdin -r -k
 echo "   and back:"
 echo -n "   "`echo "20.5 10.5" | ../xy2ij -g gridpoints_DD.txt -o stdin -r -k |tr -d "\n"`
 echo -n '-> '
 echo "20.5 10.5" | ../xy2ij -g gridpoints_DD.txt -o stdin -r -k | ../xy2ij -g gridpoints_DD.txt -o stdin
-echo ""
+echo
 
 ../getnodes gridpoints_DD.txt -x | sed '1,1d' > x.txt
 ../getnodes gridpoints_DD.txt -y | sed '1,1d' > y.txt
@@ -93,34 +94,38 @@ then
     echo -n "8. Interpolating bathymetry with bivariate cubic spline..."
     ../gridbathy -b bathy.txt -g gridpoints_DD.txt > bathy-cs.txt
     echo "done"
-    echo ""
+    echo
 
     echo -n "9. Interpolating bathymetry with linear interpolation..."
     ../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 3 > bathy-l.txt
     echo "done"
-    echo ""
+    echo
 
     echo -n "10. Interpolating bathymetry with Natural Neighbours interpolation..."
     ../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 2 > bathy-nn.txt
     echo "done"
-    echo ""
+    echo
 
     echo -n "11. Interpolating bathymetry with Non-Sibsonian NN interpolation..."
     ../gridbathy -b bathy.txt -g gridpoints_DD.txt -a 1 > bathy-ns.txt
     echo "done"
-    echo ""
+    echo
 else
     echo "no ../gridbathy found"
     echo "omitting tests for gridbathy"
+    echo
 fi
 
-echo "to visualise grid, in matlab run \"viewgrid('gridpoints_CO.txt')\""
-echo "to draw one grid over another, first run \"viewgrid('<grid 1 fname>),\""
-echo "  and then \"viewgrid('<grid 2 fname>', <figure #>)\""
-echo "to visualise grid boundary, in matlab run \"viewbound('bound.txt')\""
-echo "  (also \"viewbound('bound-r.txt')\", \"viewbound('bound-c-r.txt')\")"
-echo "to visualise interpolated bathymetry, in matlab run \"viewbathy\""
-echo "to visualise bathymetry data, in matlab run \"viewbathydata('bathy.txt', 60)\""
+echo "  - to visualise a grid, in matlab run \"viewgrid('<grid fname>')\", e.g.:"
+echo "      >>viewgrid('gridpoints_CO.txt')"
+echo "  - to draw one grid over another, first run \"viewgrid('<grid1 fname>),\""
+echo "    and then \"viewgrid('<grid2 fname>', <figure #>)\", e.g.:"
+echo "      >>viewgrid('gridpoints_CE.txt')"
+echo "      >>viewgrid('gridpoints_CO.txt', 1)"
+echo "  - to visualise grid boundary, in matlab run \"viewbound('bound.txt')\""
+echo "    (also \"viewbound('bound-r.txt')\", \"viewbound('bound-c-r.txt')\")"
+echo "  - to visualise interpolated bathymetry, in matlab run \"viewbathy\""
+echo "  - to visualise bathymetry data, in matlab run \"viewbathydata('bathy.txt', 60)\""
 
 
 
