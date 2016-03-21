@@ -607,7 +607,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
     } else if (gn->type == NT_CEN) {
         if (type == NT_COR) {
             kdtree* kt = kd_create(2);  /* 2 dimensions */
-            int ii, jj;
+            int* ids = NULL;
+            int n, ii, i, j;
 
             gn1->nx = gn->nx + 1;
             gn1->ny = gn->ny + 1;
@@ -615,20 +616,33 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
 
             /*
-             * put positions of the cells formed by cell centers into kd tree;
-             * start from the grid centre
+             * shuffle the grid nodes
              */
-            for (jj = 0, j = gn->ny / 2; jj < gn->ny - 1; ++jj, j = (j + 1) % (gn->ny - 1)) {
-                for (ii = 0, i = gn->nx / 2; ii < gn->nx - 1; ++ii, i = (i + 1) % (gn->nx - 1)) {
-                    if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
-                        double pos[2];
+            n = (gn->nx - 1) * (gn->ny - 1);
+            ids = malloc(n * sizeof(int));
+            for (j = 0, ii = 0; j < gn->ny - 1; ++j)
+                for (i = 0; i < gn->nx - 1; ++i, ++ii)
+                    ids[ii] = j * gn->nx + i;
+            shuffle(n, ids);
 
-                        pos[0] = (double) i + 0.5;
-                        pos[1] = (double) j + 0.5;
-                        kd_insert(kt, pos, NULL);
-                    }
+            /*
+             * put positions of the cells formed by cell centers into kd tree
+             */
+            for (ii = 0; ii < n; ++ii) {
+                int id = ids[ii];
+        
+                i = id % gn->nx;
+                j = id / gn->nx;
+
+                if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
+                    double pos[2];
+                    pos[0] = (double) i + 0.5;
+                    pos[1] = (double) j + 0.5;
+                    kd_insert(kt, pos, NULL);
                 }
             }
+
+            free(ids);
 
             /*
              * for each node coordinate find the nearest point in the kd tree;
@@ -659,7 +673,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             kd_free(kt);
         } else if (type == NT_DD) {
             kdtree* kt = kd_create(2);  /* 2 dimensions */
-            int ii, jj;
+            int* ids = NULL;
+            int n, ii, i, j;
 
             gn1->nx = gn->nx * 2 + 1;
             gn1->ny = gn->ny * 2 + 1;
@@ -667,20 +682,33 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
 
             /*
-             * put positions of the cells formed by cell centers into kd tree;
-             * start from the grid centre
+             * shuffle the grid nodes
              */
-            for (jj = 0, j = gn->ny / 2; jj < gn->ny - 1; ++jj, j = (j + 1) % (gn->ny - 1)) {
-                for (ii = 0, i = gn->nx / 2; ii < gn->nx - 1; ++ii, i = (i + 1) % (gn->nx - 1)) {
-                    if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
-                        double pos[2];
+            n = (gn->nx - 1) * (gn->ny - 1);
+            ids = malloc(n * sizeof(int));
+            for (j = 0, ii = 0; j < gn->ny - 1; ++j)
+                for (i = 0; i < gn->nx - 1; ++i, ++ii)
+                    ids[ii] = j * gn->nx + i;
+            shuffle(n, ids);
 
-                        pos[0] = (double) i + 0.5;
-                        pos[1] = (double) j + 0.5;
-                        kd_insert(kt, pos, NULL);
-                    }
+            /*
+             * put positions of the cells formed by cell centes into kd tree
+             */
+            for (ii = 0; ii < n; ++ii) {
+                int id = ids[ii];
+        
+                i = id % gn->nx;
+                j = id / gn->nx;
+
+                if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
+                    double pos[2];
+                    pos[0] = (double) i + 0.5;
+                    pos[1] = (double) j + 0.5;
+                    kd_insert(kt, pos, NULL);
                 }
             }
+
+            free(ids);
 
             /*
              * for each node coordinate find the nearest point in the kd tree;

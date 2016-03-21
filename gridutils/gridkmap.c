@@ -21,7 +21,7 @@ struct gridkmap {
     kdtree* kd;                 /* kd tree with grid nodes */
 };
 
-/* Builds a grid map structure to facilitate conversion from coordinate
+/** Builds a grid map structure to facilitate conversion from coordinate
  * to index space.
  *
  * @param gx array of X coordinates (of size (nce1+1)*(nce2+1))
@@ -33,28 +33,38 @@ struct gridkmap {
 gridkmap* gridkmap_build(int nce1, int nce2, double** gx, double** gy)
 {
     gridkmap* gm = malloc(sizeof(gridkmap));
-    int i, j, ii, jj;
+    int* ids = NULL;
+    int n, ii;
 
     gm->nce1 = nce1;
     gm->nce2 = nce2;
     gm->gx = gx;
     gm->gy = gy;
 
+    nce1++;
+    nce2++;
+    n = nce1 * nce2;
+    ids = malloc(n * sizeof(int));
+    for (ii = 0; ii < n; ++ii)
+        ids[ii] = ii;
+    shuffle(n, ids);
+
     gm->kd = kd_create(2);
+    for (ii = 0; ii < n; ++ii) {
+        int id = ids[ii];
+        double pos[2];
+        int i, j;
+        
+        i = id % nce1;
+        j = id / nce1;
+        pos[0] = gx[j][i];
+        pos[1] = gy[j][i];
 
-    for (jj = 0, j = nce2 / 2; jj <= nce2; ++jj, j = (j + 1) % (nce2 + 1)) {
-        for (ii = 0, i = nce1 / 2; ii <= nce1; ++ii, i = (i + 1) % (nce1 + 1)) {
-            double pos[2];
-
-            pos[0] = gx[j][i];
-            pos[1] = gy[j][i];
-            /*
-             * use kdnode.data to store index
-             */
-            if (!isnan(pos[0]) && !isnan(pos[1]))
-                kd_insert(gm->kd, pos, (void*) (long int) (j * (nce1 + 1) + i));
-        }
+        if (!isnan(pos[0]) && !isnan(pos[1]))
+            kd_insert(gm->kd, pos, (void*) (long int) id);
     }
+
+    free(ids);
 
     return gm;
 }

@@ -24,5 +24,6 @@ FILE* gu_fopen(const char* path, const char* mode);
 void* gu_alloc2d(int n1, int n2, size_t size);
 void gu_free2d(void* dummy);
 int** gu_readmask(char* fname, int nx, int ny);
+void shuffle(int n, int ids[]);
 
 #endif

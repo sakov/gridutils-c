@@ -1,3 +1,5 @@
+v. 1.01.2 21 March 2016
+        -- Shuffle grid node arrays before parsing into kd-tree
 v. 1.01.1 21 March 2016
         -- Made a few touches here and there, including:
            - modified test/viewgrid.m to draw grids one over another

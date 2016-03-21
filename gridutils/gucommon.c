@@ -24,12 +24,15 @@
 #include "gucommon.h"
 
 #define BUFSIZE 10240
+#define SEED 5555
 
 static void gu_quit_def(char* format, ...);
 
 int gu_verbose = 0;
 gu_quitfn gu_quit = gu_quit_def;
 
+/**
+ */
 static void gu_quit_def(char* format, ...)
 {
     va_list args;
@@ -44,11 +47,15 @@ static void gu_quit_def(char* format, ...)
     exit(1);
 }
 
+/**
+ */
 void gu_setquitfn(gu_quitfn quitfn)
 {
     gu_quit = quitfn;
 }
 
+/**
+ */
 FILE* gu_fopen(const char* path, const char* mode)
 {
     FILE* f = NULL;
@@ -63,7 +70,7 @@ FILE* gu_fopen(const char* path, const char* mode)
     return f;
 }
 
-/* Allocates n1xn2 matrix of something. Note that it will be accessed as 
+/** Allocates n1xn2 matrix of something. Note that it will be accessed as 
  * [n2][n1].
  * @param n1 Number of columns
  * @param n2 Number of rows
@@ -99,7 +106,7 @@ void* gu_alloc2d(int n1, int n2, size_t unitsize)
     return pp;
 }
 
-/* Destroys a matrix.
+/** Destroys a matrix.
  * @param pp Matrix
  */
 void gu_free2d(void* pp)
@@ -111,6 +118,8 @@ void gu_free2d(void* pp)
     free(p);
 }
 
+/**
+ */
 int** gu_readmask(char* fname, int nx, int ny)
 {
     int** v = NULL;
@@ -152,4 +161,21 @@ int** gu_readmask(char* fname, int nx, int ny)
     }
 
     return v;
+}
+
+/**
+ */
+void shuffle(int n, int ids[])
+{
+    int i;
+
+    srand48(SEED);
+
+    for (i = 0; i < n; ++i) {
+        int ii = (int) ((double) n * drand48());
+        int tmp = ids[i];
+
+        ids[i] = ids[ii];
+        ids[ii] = tmp;
+    }
 }
