@@ -25,12 +25,16 @@
 
 #define BUFSIZE 10240
 
+/**
+ */
 static void version()
 {
     printf("  setbathy/libgu version %s\n", gu_version);
     exit(0);
 }
 
+/**
+ */
 static void usage()
 {
     printf("  Usage: setbathy <file> [-i <imin>:<imax>] [-j <jmin>:<jmax>]\n");
@@ -44,6 +48,8 @@ static void usage()
     exit(0);
 }
 
+/**
+ */
 static void parse_commandline(int argc, char* argv[], char** fname, int* imin, int* imax, int* jmin, int* jmax, int* nx, int* ny, int* offset, char** z)
 {
     int i;
@@ -113,6 +119,8 @@ static void parse_commandline(int argc, char* argv[], char** fname, int* imin, i
         usage();
 }
 
+/**
+ */
 int main(int argc, char* argv[])
 {
     char* fname = NULL;

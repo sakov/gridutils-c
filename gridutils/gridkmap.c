@@ -54,7 +54,7 @@ gridkmap* gridkmap_build(int nce1, int nce2, double** gx, double** gy)
         int id = ids[ii];
         double pos[2];
         int i, j;
-        
+
         i = id % nce1;
         j = id / nce1;
         pos[0] = gx[j][i];

@@ -21,12 +21,16 @@
 #include "gucommon.h"
 #include "gridnodes.h"
 
+/**
+ */
 static void version()
 {
     printf("  subgrid/libgu version %s\n", gu_version);
     exit(0);
 }
 
+/**
+ */
 static void usage()
 {
     printf("  Usage: subgrid <grid file> [-i <imin>:<imax>] [-j <jmin>:<jmax>] [-x|-y] [-v]\n");
@@ -35,6 +39,8 @@ static void usage()
     exit(0);
 }
 
+/**
+ */
 static void info()
 {
     printf("  Usage: subgrid <grid file> [-i <imin>:<imax>] [-j <jmin>:<jmax>]\n");
@@ -58,6 +64,8 @@ static void info()
     exit(0);
 }
 
+/**
+ */
 static void parse_commandline(int argc, char* argv[], char** fname, COORDTYPE* ct, int* imin, int* imax, int* jmin, int* jmax)
 {
     int i;
@@ -119,6 +127,8 @@ static void parse_commandline(int argc, char* argv[], char** fname, COORDTYPE* c
         usage();
 }
 
+/**
+ */
 int main(int argc, char* argv[])
 {
     char* fname = NULL;

@@ -26,12 +26,16 @@
 #include "gucommon.h"
 #include "gridnodes.h"
 
+/**
+ */
 static void version()
 {
     printf("  getnodes/libgu version %s\n", gu_version);
     exit(0);
 }
 
+/**
+ */
 static void usage()
 {
     printf("  Usage: getnodes <grid file> [-i <node type>] [-o <node type>]\n");
@@ -41,6 +45,8 @@ static void usage()
     exit(0);
 }
 
+/**
+ */
 static void info()
 {
     printf("  Usage: getnodes <grid file> [-i <node type>] [-o <node type>]\n");
@@ -88,6 +94,8 @@ static void info()
     exit(0);
 }
 
+/**
+ */
 static void parse_commandline(int argc, char* argv[], char** gridfname, char** maskfname, NODETYPE* ntin, NODETYPE* ntout, COORDTYPE* ct, int* tweaknpolar)
 {
     int i;
@@ -174,6 +182,8 @@ static void parse_commandline(int argc, char* argv[], char** gridfname, char** m
         usage();
 }
 
+/**
+ */
 static void gridnodes_tweaknpolar(gridnodes* gn)
 {
     int nx = gridnodes_getnx(gn);
@@ -202,6 +212,8 @@ static void gridnodes_tweaknpolar(gridnodes* gn)
             }
 }
 
+/**
+ */
 int main(int argc, char* argv[])
 {
     char* gridfname = NULL;

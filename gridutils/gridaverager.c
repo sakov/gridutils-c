@@ -26,6 +26,8 @@ struct gridaverager {
     int** n;
 };
 
+/**
+ */
 gridaverager* ga_create(gridmap* gm)
 {
     gridaverager* ga = malloc(sizeof(gridaverager));
@@ -37,6 +39,8 @@ gridaverager* ga_create(gridmap* gm)
     return ga;
 }
 
+/**
+ */
 void ga_destroy(gridaverager* ga)
 {
     gu_free2d(ga->v);
@@ -44,6 +48,8 @@ void ga_destroy(gridaverager* ga)
     free(ga);
 }
 
+/**
+ */
 void ga_addpoints(gridaverager* ga, int n, point points[])
 {
     gridmap* gm = ga->gm;
@@ -60,6 +66,8 @@ void ga_addpoints(gridaverager* ga, int n, point points[])
     }
 }
 
+/**
+ */
 void ga_getvalue(gridaverager* ga, point * p)
 {
     int i, j, n;

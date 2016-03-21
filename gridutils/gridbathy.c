@@ -52,12 +52,16 @@ enum { CSA = 0, NN_SIBSON = 1, NN_NONSIBSONIAN = 2, LINEAR = 3, AVERAGE = 4 } ru
 int linear = 0;
 int indexspace = 0;
 
+/**
+ */
 static void version()
 {
     printf("  gridbathy/libgu version %s\n  libnn version %s\n  libcsa version %s\n", gu_version, nn_version, csa_version);
     exit(0);
 }
 
+/**
+ */
 static void usage()
 {
     printf("  Usage: gridbathy -b <bathymetry file> -g <grid file>\n");
@@ -74,6 +78,8 @@ static void usage()
     exit(0);
 }
 
+/**
+ */
 static void info()
 {
     printf("  Usage: gridbathy -b <bathymetry file> -g <grid file>\n");
@@ -135,6 +141,8 @@ static void info()
     exit(0);
 }
 
+/**
+ */
 static int str2double(char* token, double* value)
 {
     char* end = NULL;
@@ -154,6 +162,8 @@ static int str2double(char* token, double* value)
     return 1;
 }
 
+/**
+ */
 static int str2int(char* token, int* value)
 {
     char* end = NULL;
@@ -173,6 +183,8 @@ static int str2int(char* token, int* value)
     return 1;
 }
 
+/**
+ */
 static void parse_commandline(int argc, char* argv[], char** bathyfname, char** gridfname, char** maskfname, NODETYPE* nt, int* ppe, double* zmin, double* zmax, int* ii, int* jj)
 {
     int i;
@@ -280,6 +292,8 @@ static void parse_commandline(int argc, char* argv[], char** bathyfname, char** 
         version();
 }
 
+/**
+ */
 int main(int argc, char* argv[])
 {
     char* bathyfname = NULL;

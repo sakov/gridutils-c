@@ -58,7 +58,7 @@ struct gridbmap {
                                  * [nce1+1][nce2+1] */
 };
 
-/* Creates a subgrid.
+/** Creates a subgrid.
  * @param gm Grid map
  * @param pl Boundary polygon for the subgrid
  * @param mini Minimal i index within the subgrid
@@ -138,7 +138,7 @@ static subgrid* subgrid_create(gridbmap* gm, poly* pl, int i1, int i2, int j1, i
     return l;
 }
 
-/* Destroys a subgrid.
+/** Destroys a subgrid.
  * @param l Subgrid
  */
 static void subgrid_destroy(subgrid* l)
@@ -151,7 +151,7 @@ static void subgrid_destroy(subgrid* l)
     free(l);
 }
 
-/* Cuts boundary polygon in two. 
+/** Cuts boundary polygon in two. 
  * The cut goes either horizontally ([fixed][changes]) or vertically 
  * ([changes][fixed]) in index space; the physical nodes are given by
  * input double arrays; first two intersections of the cutting polyline
@@ -354,6 +354,8 @@ static void subgrid_divide(subgrid* sg, subgrid** sg1, subgrid** sg2)
     *sg2 = subgrid_create(gm, pl2, sg->mini, sg->maxi, sg->minj, sg->maxj);
 }
 
+/**
+ */
 static void gridbmap_subdivide(gridbmap* gm, subgrid* sg)
 {
     subgrid* sg1 = NULL;
@@ -374,7 +376,7 @@ static void gridbmap_subdivide(gridbmap* gm, subgrid* sg)
     poly_compact(sg->bound, EPS_COMPACT);
 }
 
-/* Builds a grid map structure to facilitate conversion from coordinate
+/** Builds a grid map structure to facilitate conversion from coordinate
  * to index space.
  *
  * @param gx array of X coordinates (of size (nce1+1)*(nce2+1))
@@ -406,7 +408,7 @@ gridbmap* gridbmap_build(int nce1, int nce2, double** gx, double** gy)
     return gm;
 }
 
-/* Destroys a grid map.
+/** Destroys a grid map.
  * @param gm Grid map
  */
 void gridbmap_destroy(gridbmap* gm)
@@ -415,7 +417,7 @@ void gridbmap_destroy(gridbmap* gm)
     free(gm);
 }
 
-/* Calculates indices (i,j) of a grid cell containing point (x,y).
+/** Calculates indices (i,j) of a grid cell containing point (x,y).
  *
  * @param gm Grid map
  * @param x X coordinate
@@ -456,16 +458,22 @@ int gridbmap_xy2ij(gridbmap* gm, double x, double y, int* i, int* j)
     return 1;
 }
 
+/**
+ */
 int gridbmap_getnce1(gridbmap* gm)
 {
     return gm->nce1;
 }
 
+/**
+ */
 int gridbmap_getnce2(gridbmap* gm)
 {
     return gm->nce2;
 }
 
+/**
+ */
 void gridbmap_getextent(gridbmap* gm, double* xmin, double* xmax, double* ymin, double* ymax)
 {
     extent* e = &gm->trunk->bound->e;

@@ -22,12 +22,16 @@
 #include "gridnodes.h"
 #include "poly.h"
 
+/**
+ */
 static void version()
 {
     printf("  getbound/libgu version %s\n", gu_version);
     exit(0);
 }
 
+/**
+ */
 static void usage()
 {
     printf("  Usage: getbound <gridfile> [-c] [-i {DD|CO}] [-r] [-v]\n");
@@ -36,6 +40,8 @@ static void usage()
     exit(0);
 }
 
+/**
+ */
 static void info()
 {
     printf("  Usage: getbound [options] <grid file>\n");
@@ -72,6 +78,8 @@ static void info()
     exit(0);
 }
 
+/**
+ */
 static void parse_commandline(int argc, char* argv[], char** fname, int* compact, int* ij, NODETYPE* nt)
 {
     int i;
@@ -133,6 +141,8 @@ static void parse_commandline(int argc, char* argv[], char** fname, int* compact
         usage();
 }
 
+/**
+ */
 int main(int argc, char* argv[])
 {
     char* fname = NULL;

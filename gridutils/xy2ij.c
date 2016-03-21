@@ -34,12 +34,16 @@ static NODETYPE nt = NT_DD;
 
 typedef int (*mapfn) (void*, double, double, double*, double*);
 
+/**
+ */
 static void version()
 {
     printf("  xy2ij/libgu version %s\n", gu_version);
     exit(0);
 }
 
+/**
+ */
 static void usage()
 {
     printf("  Usage: xy2ij [-i {DD|CO}] [-f] [-k] [-r] [-v] -g <grid file> -o <point file>\n");
@@ -48,6 +52,8 @@ static void usage()
     exit(0);
 }
 
+/**
+ */
 static void info()
 {
     printf("  Usage: xy2ij [options] -g <grid file> -o <point file>\n");
@@ -92,6 +98,8 @@ static void info()
     exit(0);
 }
 
+/**
+ */
 static void parse_commandline(int argc, char* argv[], char** gfname, char** ofname)
 {
     int i;
@@ -162,6 +170,8 @@ static void parse_commandline(int argc, char* argv[], char** gfname, char** ofna
         usage();
 }
 
+/**
+ */
 int main(int argc, char* argv[])
 {
     char* gfname = NULL;

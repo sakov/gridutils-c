@@ -25,7 +25,7 @@
 #define POLY_NSTART 4
 #define POLY_MAXLINELEN 2048
 
-/* Clears extent.
+/** Clears extent.
  * @param e Extent
  */
 static void extent_clear(extent* e)
@@ -36,7 +36,7 @@ static void extent_clear(extent* e)
     e->ymax = -DBL_MAX;
 }
 
-/* Checks whether a point belongs to extent.
+/** Checks whether a point belongs to extent.
  * @param e Extent
  * @param x X coordinate
  * @param y Y coordinate
@@ -50,7 +50,7 @@ static int extent_containspoint(extent* e, double x, double y)
     return 0;
 }
 
-/* Updates extent to include a specified point.
+/** Updates extent to include a specified point.
  * @param e Extent
  * @param x X coordinate
  * @param y Y coordinate
@@ -67,7 +67,7 @@ static void extent_update(extent* e, double x, double y)
         e->ymax = y;
 }
 
-/* Tests whether two points coincide. A threshold distance is used to
+/** Tests whether two points coincide. A threshold distance is used to
  * define the tolerance within which two points may be considered the same.
  *
  * @param p1 first point
@@ -80,7 +80,7 @@ static int point_equal(double x1, double y1, double x2, double y2, double eps)
     return ((fabs(x1 - x2) <= eps) && (fabs(y1 - y2) <= eps));
 }
 
-/* Re-calculates extent of a polyline.
+/** Re-calculates extent of a polyline.
  * @param pl Polyline
  * @param x X coordinate
  * @param y Y coordinate
@@ -98,7 +98,7 @@ static void poly_recalcextent(poly* pl)
         extent_update(e, xs[i], ys[i]);
 }
 
-/* Appends a point to the tail of a polyline.
+/** Appends a point to the tail of a polyline.
  * @param pl Polyline
  * @param x X coordinate
  * @param y Y coordinate
@@ -120,7 +120,7 @@ void poly_addpoint(poly* pl, double x, double y)
     extent_update(&pl->e, x, y);
 }
 
-/* Adds a point to a polyline at a given position.
+/** Adds a point to a polyline at a given position.
  * No action for invalid index.
  * @param pl Polyline
  * @param index Index
@@ -148,7 +148,7 @@ void poly_addpointat(poly* pl, int index, double x, double y)
     extent_update(&pl->e, x, y);
 }
 
-/* Appends one polyline to another, like strcat().
+/** Appends one polyline to another, like strcat().
  * @param pl1 Destination polyline
  * @param pl2 Source polyline
  */
@@ -171,7 +171,7 @@ void poly_append(poly* pl1, poly* pl2)
     memcpy(&pl1->y[pl1->n], pl2->y, pl2->n * sizeof(double));
 }
 
-/* Computes the area of a polygon. 
+/** Computes the area of a polygon. 
  * For an open polyline, implies it being closed. The area is positive for
  * counterclockwise polygon, negative otherwise.
  * @param pl Polyline
@@ -193,7 +193,7 @@ double poly_area(poly* pl)
     return area / 2.0;
 }
 
-/* Clears a polyline. 
+/** Clears a polyline. 
  * Does not deallocate memory; use poly_destroy() for that.
  * @param pl Polyline
  */
@@ -203,7 +203,7 @@ void poly_clear(poly* pl)
     extent_clear(&pl->e);
 }
 
-/* Makes a deep copy of a polyline.
+/** Makes a deep copy of a polyline.
  * @param pl Polyline
  * @return Polyline
  */
@@ -226,7 +226,7 @@ poly* poly_copy(poly* pl)
     return pl1;
 }
 
-/* Closes a polyline by adding the first point to the tail if necessary.
+/** Closes a polyline by adding the first point to the tail if necessary.
  * @param pl Polyline
  * @return Polyline
  */
@@ -236,7 +236,7 @@ void poly_close(poly* pl)
         poly_addpoint(pl, pl->x[0], pl->y[0]);
 }
 
-/* Tests whether a point is inside a polygon.
+/** Tests whether a point is inside a polygon.
  * The polyline is assumed to be closed: an extra line segment from the end 
  * point back to the start point is assumed if necessary.
  * @param pl Polyline
@@ -297,7 +297,7 @@ int poly_containspoint(poly* pl, double x, double y)
     return 0;
 }
 
-/* Constructor.
+/** Constructor.
  * @return Polyline
  */
 poly* poly_create()
@@ -312,7 +312,7 @@ poly* poly_create()
     return pl;
 }
 
-/* Removes a point at a given position from a polyline.
+/** Removes a point at a given position from a polyline.
  * @param pl Polyline
  * @param index Position
  */
@@ -337,7 +337,7 @@ void poly_deletepoint(poly* pl, int index)
     }
 }
 
-/* Destructor.
+/** Destructor.
  * @param pl Polyline
  */
 void poly_destroy(poly* pl)
@@ -347,7 +347,7 @@ void poly_destroy(poly* pl)
     free(pl);
 }
 
-/* Finds index of a point within polyline.
+/** Finds index of a point within polyline.
  * @param pl Polyline
  * @param y Y coordinate
  * @return Index if found; -1 otherwise
@@ -367,7 +367,7 @@ int poly_findindex(poly* pl, double x, double y)
     return -1;
 }
 
-/* Forms polyline boundary around a grid.
+/** Forms polyline boundary around a grid.
  * Note: supposed to handle a grid of corner nodes only.
  * @param nce1 Number of cells in X direction
  * @param nce2 Number of cells in Y direction
@@ -425,7 +425,7 @@ poly* poly_formbound(int nce1, int nce2, double** x, double** y)
     return (pl);
 }
 
-/* Forms polyline boundary around a grid in index space.
+/** Forms polyline boundary around a grid in index space.
  * @param nce1 Number of cells in X direction
  * @param nce2 Number of cells in Y direction
  * @param x X coordinates of grid nodes
@@ -481,7 +481,7 @@ poly* poly_formboundij(int nce1, int nce2, double** x)
     return (pl);
 }
 
-/* Checks whether the polyline is closed.
+/** Checks whether the polyline is closed.
  * @param pl Polyline
  * @param eps Distance tolerance
  * @return 1 for yes, 0 for no
@@ -491,11 +491,15 @@ int poly_isclosed(poly* pl, double eps)
     return pl->n > 1 && point_equal(pl->x[0], pl->y[0], pl->x[pl->n - 1], pl->y[pl->n - 1], eps);
 }
 
+/**
+ */
 static int iscommentline(char* line)
 {
     return (line[0] == '#');
 }
 
+/**
+ */
 static int isblankline(char* line)
 {
     while (*line && isspace(*line))
@@ -505,6 +509,8 @@ static int isblankline(char* line)
     return 1;
 }
 
+/**
+ */
 static int nextline(char* line, int n, FILE* fp)
 {
     char* s;
@@ -519,7 +525,7 @@ static int nextline(char* line, int n, FILE* fp)
     return 1;
 }
 
-/* Reads points from a file stream and appends them to a polyline.
+/** Reads points from a file stream and appends them to a polyline.
  * @param pl Polyline
  * @param fp File handle
  * @return The number of points in the polyline
@@ -544,8 +550,8 @@ int poly_read(poly* pl, FILE* fp)
     return (pl->n);
 }
 
-/* Resamples a polyline including only points more than the threshold
- ** distance apart.
+/** Resamples a polyline including only points more than the threshold
+ * distance apart.
  * @param pl Polyline
  * @param eps Threshold distance
  */
@@ -573,7 +579,7 @@ void poly_resample(poly* pl, double eps)
     }
 }
 
-/* Reverses points in a polyline.
+/** Reverses points in a polyline.
  * @param pl Polyline
  */
 void poly_reverse(poly* pl)
@@ -598,7 +604,7 @@ void poly_reverse(poly* pl)
     }
 }
 
-/* Removes spikes from a polyline.
+/** Removes spikes from a polyline.
  * @param pl Polyline
  * @param maxdist Maximal allowed distance between two adjacent points
  */
@@ -626,7 +632,7 @@ void poly_despike(poly* pl, double maxdist)
     }
 }
 
-/* Writes polyline to a file stream.
+/** Writes polyline to a file stream.
  * @param pl Polyline
  * @param fp File handle
  */
@@ -639,12 +645,14 @@ void poly_write(poly* pl, FILE* fp)
         fprintf(fp, "%.15g %.15g\n", pl->x[i], pl->y[i]);
 }
 
+/**
+ */
 static int ononeline(double* x, double* y, int i1, int i2, int i3, double eps)
 {
     return fabs((x[i1] - x[i2]) * (y[i3] - y[i2]) - (x[i3] - x[i2]) * (y[i1] - y[i2])) <= eps;
 }
 
-/* Deletes redundant nodes.
+/** Deletes redundant nodes.
  * @param pl Polyline
  * @param eps A small number used in tests on two points being the same or
  *            three points belonging to one line.

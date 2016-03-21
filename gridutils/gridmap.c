@@ -62,7 +62,7 @@ int gridmap_xy2ij(gridmap* gm, double x, double y, int* i, int* j)
     return success;
 }
 
-/* Calculates (x,y) coordinates for a point within the grid with
+/** Calculates (x,y) coordinates for a point within the grid with
  * specified fractional indices (i,j).
  *
  * The transformation used to compute the coords is a forward
@@ -155,7 +155,7 @@ int gridmap_fij2xy(gridmap* gm, double fi, double fj, double* x, double* y)
     return status;
 }
 
-/* Calculates the branch of sqrt() to be taken in gridbmap_xy2fij(). Has to be
+/** Calculates the branch of sqrt() to be taken in gridbmap_xy2fij(). Has to be
  * called only once for a grid.
  * 
  * @param gm Grid map
@@ -234,7 +234,7 @@ static int calc_branch(gridmap* gm, double x, double y)
     return -1;
 }
 
-/* Calculates (x,y) coordinates for a point within a numerical grid specified
+/** Calculates (x,y) coordinates for a point within a numerical grid specified
  * by fractional indices (i,j).
  *
  * The transformation used to compute the indices is an inverse

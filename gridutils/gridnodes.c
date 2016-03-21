@@ -60,7 +60,7 @@ char* nodetype2str[] = {
     "corner"
 };
 
-/* Constructor. Reads double density grid nodes into arrays of X and Y
+/** Constructor. Reads double density grid nodes into arrays of X and Y
  * coordinates.
  * @param fname File name with grid nodes; can be "stdin"
  * @param type Node type
@@ -149,8 +149,7 @@ gridnodes* gridnodes_read(char* fname, NODETYPE type)
     return gn;
 }
 
-/* Constructor. Creates an empty grid.
- *
+/** Constructor. Creates an empty grid.
  * @param nx Number of columns
  * @param nx Number of rows
  * @param type Node type
@@ -172,8 +171,7 @@ gridnodes* gridnodes_create(int nx, int ny, NODETYPE type)
     return gn;
 }
 
-/* Constructor.
- *
+/** Constructor.
  * @param nx Number of columns
  * @param nx Number of rows
  * @param type Node type
@@ -197,8 +195,7 @@ gridnodes* gridnodes_create2(int nx, int ny, NODETYPE type, double** gx, double*
     return gn;
 }
 
-/* Allows to fill the created gridnodes object point by point.
- *
+/** Allows to fill the created gridnodes object point by point.
  * @param gn Grid nodes
  * @param x X coordinate
  * @param y Y coordinate
@@ -213,7 +210,7 @@ void gridnodes_readnextpoint(gridnodes* gn, double x, double y)
     gn->nextpoint = (gn->nextpoint + 1) % (gn->nx * gn->ny);
 }
 
-/* Destructor.
+/** Destructor.
  * @param gn Grid nodes
  */
 void gridnodes_destroy(gridnodes* gn)
@@ -252,7 +249,7 @@ void gridnodes_destroy(gridnodes* gn)
  * grid).
  */
 
-/* Validates double density grid nodes.
+/** Validates double density grid nodes.
  * @param gn Grid nodes
  */
 static void gridnodes_validate_dd(gridnodes* gn)
@@ -264,7 +261,7 @@ static void gridnodes_validate_dd(gridnodes* gn)
     int count;
     int i, j;
 
-    count = 0; /* the valid nodes marked as bad */
+    count = 0;                  /* the valid nodes marked as bad */
     /*
      * corner nodes:
      *
@@ -353,7 +350,7 @@ static void gridnodes_validate_dd(gridnodes* gn)
     }
 }
 
-/* Validates corner grid nodes.
+/** Validates corner grid nodes.
  * @param gn Grid nodes
  */
 static void gridnodes_validate_cor(gridnodes* gn)
@@ -394,7 +391,7 @@ static void gridnodes_validate_cor(gridnodes* gn)
     }
 }
 
-/* Validates grid nodes.
+/** Validates grid nodes.
  * Sets all nodes not belonging to any valid cells to NaNs.
  * @param gn Grid nodes
  */
@@ -415,7 +412,7 @@ void gridnodes_validate(gridnodes* gn)
         fflush(stdout);
 }
 
-/* Makes a deep copy of grid nodes.
+/** Makes a deep copy of grid nodes.
  * @param old Source grid nodes
  * @return Destination grid nodes
  */
@@ -434,7 +431,7 @@ gridnodes* gridnodes_copy(gridnodes* old)
     return new;
 }
 
-/* Makes a deep copy of subgrid nodes with indices [imin:imax][jmin:jmax].
+/** Makes a deep copy of subgrid nodes with indices [imin:imax][jmin:jmax].
  * @param old Source grid nodes
  * @param imin Minimal i index
  * @param imax Maximal i index 
@@ -477,7 +474,7 @@ gridnodes* gridnodes_subgrid(gridnodes* gn, int imin, int imax, int jmin, int jm
     return new;
 }
 
-/* Calculates (x,y) coordinates from fractional indices (fi,fj) using mapping 
+/** Calculates (x,y) coordinates from fractional indices (fi,fj) using mapping 
  * of the cell (i,j).
  *
  * The transformation used to compute the coords is a forward
@@ -526,7 +523,7 @@ static void fij2xy(gridnodes* gn, double fi, double fj, int i, int j, double* x,
     }
 }
 
-/* Transforms grid nodes of one type into grid nodes of another type.
+/** Transforms grid nodes of one type into grid nodes of another type.
  * @param gn Grid nodes
  * @param type Type of new grid nodes
  * @return New grid nodes
@@ -630,12 +627,13 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
              */
             for (ii = 0; ii < n; ++ii) {
                 int id = ids[ii];
-        
+
                 i = id % gn->nx;
                 j = id / gn->nx;
 
                 if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
                     double pos[2];
+
                     pos[0] = (double) i + 0.5;
                     pos[1] = (double) j + 0.5;
                     kd_insert(kt, pos, NULL);
@@ -696,12 +694,13 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
              */
             for (ii = 0; ii < n; ++ii) {
                 int id = ids[ii];
-        
+
                 i = id % gn->nx;
                 j = id / gn->nx;
 
                 if (!isnan(gn->gx[j][i]) && !isnan(gn->gx[j + 1][i]) && !isnan(gn->gx[j][i + 1]) && !isnan(gn->gx[j + 1][i + 1])) {
                     double pos[2];
+
                     pos[0] = (double) i + 0.5;
                     pos[1] = (double) j + 0.5;
                     kd_insert(kt, pos, NULL);
@@ -746,6 +745,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
     return gn1;
 }
 
+/**
+ */
 void gridnodes_applymask(gridnodes* gn, int** mask)
 {
     if (gn->type == NT_DD) {
@@ -808,7 +809,7 @@ void gridnodes_applymask(gridnodes* gn, int** mask)
         gu_quit("gridnodes_applymask(): nodes type not specified");
 }
 
-/* Writes grid nodes into a file.
+/** Writes grid nodes into a file.
  * @param gn Grid nodes
  * @param fname File name; can be "stdout"
  * @param ctype Output coordinate type: CT_XY for XY, CT_X for X and CT_Y for Y
@@ -879,6 +880,8 @@ void gridnodes_write(gridnodes* gn, char* fname, COORDTYPE ctype)
         fflush(stdout);
 }
 
+/**
+ */
 static void gridstats_init(gridstats* gs)
 {
     gs->mdo = NaN;
@@ -889,6 +892,8 @@ static void gridstats_init(gridstats* gs)
     gs->aar = NaN;
 }
 
+/**
+ */
 static double dtheta(double x1, double y1, double x2, double y2)
 {
     double cos_th = (x1 * x2 + y1 * y2) / hypot(x1, y1) / hypot(x2, y2) / 2.0;
@@ -898,6 +903,8 @@ static double dtheta(double x1, double y1, double x2, double y2)
     return dth;
 }
 
+/**
+ */
 static void gridnodes_calcstats_cor(gridnodes* gn)
 {
     int nx = gn->nx - 1;
@@ -957,6 +964,8 @@ static void gridnodes_calcstats_cor(gridnodes* gn)
     gn->stats->aar = ar_sum / ncell;
 }
 
+/**
+ */
 void gridnodes_calcstats(gridnodes* gn)
 {
     gridnodes* gn1;
@@ -991,26 +1000,36 @@ void gridnodes_calcstats(gridnodes* gn)
     }
 }
 
+/**
+ */
 int gridnodes_getnx(gridnodes* gn)
 {
     return gn->nx;
 }
 
+/**
+ */
 int gridnodes_getny(gridnodes* gn)
 {
     return gn->ny;
 }
 
+/**
+ */
 double** gridnodes_getx(gridnodes* gn)
 {
     return gn->gx;
 }
 
+/**
+ */
 double** gridnodes_gety(gridnodes* gn)
 {
     return gn->gy;
 }
 
+/**
+ */
 int gridnodes_getnce1(gridnodes* gn)
 {
     if (gn->type == NT_DD)
@@ -1025,6 +1044,8 @@ int gridnodes_getnce1(gridnodes* gn)
     return 0;
 }
 
+/**
+ */
 int gridnodes_getnce2(gridnodes* gn)
 {
     if (gn->type == NT_DD)
