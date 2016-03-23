@@ -1,3 +1,7 @@
+v. 1.01.4 23 March 2016
+        -- Added checks for NaNs when added kd-tree nodes
+        -- Tidied up gridkmap_build()
+        -- Some cosmetic changes
 v. 1.01.3 23 March 2016
         -- Modified kdtree code (structurally and cosmetically)
 v. 1.01.2 21 March 2016

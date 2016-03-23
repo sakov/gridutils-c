@@ -1,3 +1,18 @@
+/******************************************************************************
+ *
+ * File:           grikmap.c
+ *  
+ * Created:        16 March 2016
+ *  
+ * Author:         Pavel Sakov
+ *                 BoM
+ *
+ * Purpose:        Mapping of curvilinear grids based on kd-tree.
+ *
+ * Revisions:      
+ *
+ *****************************************************************************/
+
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
@@ -18,14 +33,14 @@ struct gridkmap {
                                  * [nce2+1][nce1+1] */
     double** gy;                /* reference to array of Y coords
                                  * [nce2+1][nce1+1] */
-    kdtree* kd;                 /* kd tree with grid nodes */
+    kdtree* tree;               /* kd tree with grid nodes */
 };
 
 /** Builds a grid map structure to facilitate conversion from coordinate
  * to index space.
  *
- * @param gx array of X coordinates (of size (nce1+1)*(nce2+1))
- * @param gy array of Y coordinates (of size (nce1+1)*(nce2+1))
+ * @param gx array of X coordinates [nce2 + 1][nce1 + 1]
+ * @param gy array of Y coordinates [nce2 + 1][nce1 + 1]
  * @param nce1 number of cells in e1 direction
  * @param nce2 number of cells in e2 direction
  * @return a map tree to be used by xy2ij
@@ -33,38 +48,17 @@ struct gridkmap {
 gridkmap* gridkmap_build(int nce1, int nce2, double** gx, double** gy)
 {
     gridkmap* gm = malloc(sizeof(gridkmap));
-    int* ids = NULL;
-    int n, ii;
+    double* data[2];
 
     gm->nce1 = nce1;
     gm->nce2 = nce2;
     gm->gx = gx;
     gm->gy = gy;
 
-    nce1++;
-    nce2++;
-    n = nce1 * nce2;
-    ids = malloc(n * sizeof(int));
-    for (ii = 0; ii < n; ++ii)
-        ids[ii] = ii;
-    shuffle(n, ids);
-
-    gm->kd = kd_create(2);
-    for (ii = 0; ii < n; ++ii) {
-        int id = ids[ii];
-        double pos[2];
-        int i, j;
-
-        i = id % nce1;
-        j = id / nce1;
-        pos[0] = gx[j][i];
-        pos[1] = gy[j][i];
-
-        if (!isnan(pos[0]) && !isnan(pos[1]))
-            kd_insertnode(gm->kd, pos, id);
-    }
-
-    free(ids);
+    gm->tree = kd_create(2);
+    data[0] = gx[0];
+    data[1] = gy[0];
+    kd_insertnodes(gm->tree, (nce1 + 1) * (nce2 + 1), data, 1 /* shuffle */ );
 
     return gm;
 }
@@ -73,7 +67,7 @@ gridkmap* gridkmap_build(int nce1, int nce2, double** gx, double** gy)
  */
 void gridkmap_destroy(gridkmap* gm)
 {
-    kd_destroy(gm->kd);
+    kd_destroy(gm->tree);
     free(gm);
 }
 
@@ -82,8 +76,8 @@ void gridkmap_destroy(gridkmap* gm)
 int gridkmap_xy2ij(gridkmap* gm, double x, double y, int* iout, int* jout)
 {
     double pos[2] = { x, y };
-    size_t nearest = kd_findnearestnode(gm->kd, pos);
-    size_t id = kd_getnodeorigid(gm->kd, nearest);
+    size_t nearest = kd_findnearestnode(gm->tree, pos);
+    size_t id = kd_getnodeorigid(gm->tree, nearest);
     poly* p = poly_create();
     int success = 0;
     int i, j, i1, i2, j1, j2;
@@ -104,6 +98,8 @@ int gridkmap_xy2ij(gridkmap* gm, double x, double y, int* iout, int* jout)
      */
     for (j = j1; j <= j2 - 1; ++j)
         for (i = i1; i <= i2 - 1; ++i) {
+            if (!isfinite(gm->gx[j][i]) || !isfinite(gm->gx[j][i + 1]) || !isfinite(gm->gx[j + 1][i + 1]) || !isfinite(gm->gx[j + 1][i]))
+                continue;
             poly_addpoint(p, gm->gx[j][i], gm->gy[j][i]);
             poly_addpoint(p, gm->gx[j][i + 1], gm->gy[j][i + 1]);
             poly_addpoint(p, gm->gx[j + 1][i + 1], gm->gy[j + 1][i + 1]);

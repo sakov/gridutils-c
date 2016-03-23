@@ -1,3 +1,19 @@
+/******************************************************************************
+ *
+ * File:           gridkmap.h
+ *  
+ * Created:        16 March 2016
+ *  
+ * Author:         Pavel Sakov
+ *                 BoM
+ *  
+ * Purpose:        Calculates transformations between physical and index
+ *                 space for a numerical grid using kd-tree
+ *
+ * Revisions:      
+ *
+ *****************************************************************************/
+
 #if !defined(_GRIDKMAP_H)
 #define _GRIDKMAP_H
 

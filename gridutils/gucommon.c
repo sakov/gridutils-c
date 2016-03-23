@@ -24,7 +24,6 @@
 #include "gucommon.h"
 
 #define BUFSIZE 10240
-#define SEED 5555
 
 static void gu_quit_def(char* format, ...);
 
@@ -161,21 +160,4 @@ int** gu_readmask(char* fname, int nx, int ny)
     }
 
     return v;
-}
-
-/**
- */
-void shuffle(int n, int ids[])
-{
-    int i;
-
-    srand48(SEED);
-
-    for (i = 0; i < n; ++i) {
-        int ii = (int) ((double) n * drand48());
-        int tmp = ids[i];
-
-        ids[i] = ids[ii];
-        ids[ii] = tmp;
-    }
 }

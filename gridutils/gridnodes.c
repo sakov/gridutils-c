@@ -29,6 +29,7 @@
 #include "kdtree.h"
 
 #define BUFSIZE 10240
+#define SEED 5555
 
 /* Deviation from Orthogonality = 90 - theta
  * Aspect Ratio = max(dx,dy) / min(dx,dy)
@@ -520,6 +521,23 @@ static void fij2xy(gridnodes* gn, double fi, double fj, int i, int j, double* x,
 
         *x = a * u * v + b * u + c * v + d;
         *y = e * u * v + f * u + g * v + h;
+    }
+}
+
+/**
+ */
+static void shuffle(int n, int ids[])
+{
+    int i;
+
+    srand48(SEED);
+
+    for (i = 0; i < n; ++i) {
+        int ii = (int) ((double) n * drand48());
+        int tmp = ids[i];
+
+        ids[i] = ids[ii];
+        ids[ii] = tmp;
     }
 }
 

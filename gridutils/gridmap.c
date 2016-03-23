@@ -1,3 +1,34 @@
+/******************************************************************************
+ *
+ * File:           gridbmap.c
+ *  
+ * Created:        Fri Feb 19 11:36:24 EST 1992 (as xytoij.c)
+ *  
+ * Author:         Daniel Delbourgo/Stephen Walker
+ *                 CSIRO Division of Oceanography
+ *
+ * Purpose:        Calculates transformations between physical and index
+ *                 space within a numerical grid
+ *
+ * Revisions:      110898 JRW
+ *                 Added IJtoXY conversion and
+ *                 fractional XYtoIJ and IJtoXY conversion
+ *
+ *                 2000 Pavel Sakov
+ *                 Added branch calculation to handle both right- and
+ *                 left-handed grids.
+ *
+ *                 April 2002 Pavel Sakov
+ *                 Major mods to handle topologically non-rectangular grids
+ *                 Renamed to gridmap.c
+ *
+ *                 16 March 2016 Pavel Sakov
+ *                 Moved most of the functionality related with spatial binary
+ *                 trees to gridbmap.c. The code of this file is basically
+ *                 common for "gridkmap" and "gridbmap" objects.
+ *
+ *****************************************************************************/
+
 #include <stdio.h>
 #include <math.h>
 #include <string.h>

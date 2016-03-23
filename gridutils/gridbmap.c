@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * File:           gridmap.c
+ * File:           gridbmap.c
  *  
  * Created:        Fri Feb 19 11:36:24 EST 1992 (as xytoij.c)
  *  
@@ -21,6 +21,10 @@
  *                 April 2002 Pavel Sakov
  *                 Major mods to handle topologically non-rectangular grids
  *                 Renamed to gridmap.c
+ *
+ *                 16 March 2016 Pavel Sakov
+ *                 Changed name from gridmap.c to gridbmap.c. Moved some
+ *                 functionality shared with gridkmap to gridmap.c
  *
  *****************************************************************************/
 
