@@ -61,7 +61,7 @@ gridkmap* gridkmap_build(int nce1, int nce2, double** gx, double** gy)
         pos[1] = gy[j][i];
 
         if (!isnan(pos[0]) && !isnan(pos[1]))
-            kd_insert(gm->kd, pos, (void*) (long int) id);
+            kd_insertnode(gm->kd, pos, id);
     }
 
     free(ids);
@@ -73,7 +73,7 @@ gridkmap* gridkmap_build(int nce1, int nce2, double** gx, double** gy)
  */
 void gridkmap_destroy(gridkmap* gm)
 {
-    kd_free(gm->kd);
+    kd_destroy(gm->kd);
     free(gm);
 }
 
@@ -82,8 +82,8 @@ void gridkmap_destroy(gridkmap* gm)
 int gridkmap_xy2ij(gridkmap* gm, double x, double y, int* iout, int* jout)
 {
     double pos[2] = { x, y };
-    kdnode* nearest = kd_nearest(gm->kd, pos);
-    size_t id = (size_t) kdnode_data(nearest);
+    size_t nearest = kd_findnearestnode(gm->kd, pos);
+    size_t id = kd_getnodeorigid(gm->kd, nearest);
     poly* p = poly_create();
     int success = 0;
     int i, j, i1, i2, j1, j2;

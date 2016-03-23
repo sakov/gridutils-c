@@ -1,5 +1,84 @@
+/******************************************************************************
+ *
+ * File:        kdtree.h        
+ *
+ * Created:     23/03/2016
+ *
+ * Author:      Pavel Sakov
+ *              Derived from the code by John Tsiombikas (see the tail of the
+ *              file)
+ *
+ * Description: KD-tree code
+ *
+ * Revisions:   
+ *
+ *****************************************************************************/
+
+#if !defined(_KDTREE_H_)
+
+struct kdtree;
+typedef struct kdtree kdtree;
+
+struct kdnode;
+typedef struct kdnode kdnode;
+
+struct kdset;
+typedef struct kdset kdset;
+
+/* create a kd-tree for "k"-dimensional data
+ */
+kdtree* kd_create(int ndim);
+
+/* free the kdtree
+ */
+void kd_destroy(kdtree* tree);
+
+/* insert a node, specifying its position, and optional data
+ */
+void kd_insertnode(kdtree* tree, const double* coords, size_t id_orig);
+
+/* insert an array of nodes
+ */
+void kd_insertnodes(kdtree* tree, size_t n, double** src, int randomise);
+
+/* get the number of tree nodes
+ */
+size_t kd_getsize(kdtree* tree);
+
+/* find any nearest nodes from the specified point within a range
+ */
+kdset* kd_findnodeswithinrange(const kdtree* tree, const double* coords, double range, int ordered);
+
+/* find the nearest node
+ */
+size_t kd_findnearestnode(const kdtree* tree, const double* coords);
+
+/* get position of a node
+ */
+double* kd_getnodecoords(const kdtree* tree, size_t id);
+
+/* get the original ID of the node (it is different to the current ID if the
+ * input was shuffled)
+ */
+size_t kd_getnodeorigid(const kdtree* tree, size_t id);
+
+/* read node id of the current result (SIZE_MAX if no more results are
+ * available; advance the result set iterator)
+ */
+size_t kdset_read(kdset* set, double* dist);
+
+/* get the size of the result set
+ */
+size_t kdset_getsize(const kdset* set);
+
+/* free a result set
+ */
+void kdset_free(kdset* set);
+
+#define _KDTREE_H_
+#endif                          /* _KDTREE_H_ */
+
 /*
-This file is part of ``kdtree'', a library for working with kd-trees.
 Copyright (C) 2007-2009 John Tsiombikas <nuclear@siggraph.org>
 
 Redistribution and use in source and binary forms, with or without
@@ -24,81 +103,3 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
-#ifndef _KDTREE_H_
-#define _KDTREE_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct kdtree kdtree;
-typedef struct kdres kdres;
-typedef struct kdnode kdnode;
-
-/* create a kd-tree for "k"-dimensional data */
-kdtree *kd_create(int k);
-
-/* free the kdtree */
-void kd_free(kdtree *tree);
-
-/* remove all the elements from the tree */
-void kd_clear(kdtree *tree);
-
-/* if called with non-null 2nd argument, the function provided
- * will be called on data pointers (see kd_insert) when nodes
- * are to be removed from the tree.
- */
-void kd_data_destructor(kdtree *tree, void (*destr)(void*));
-
-/* insert a node, specifying its position, and optional data */
-int kd_insert(kdtree *tree, const double *pos, void *data);
-
-/* Find the nearest node from a given point.
- *
- * This function returns a pointer to a result set with at most one element.
- */
-kdnode *kd_nearest(kdtree *tree, const double *pos);
-
-/* Find any nearest nodes from a given point within a range.
- *
- * This function returns a pointer to a result set, which can be manipulated
- * by the kd_res_* functions.
- * The returned pointer can be null as an indication of an error. Otherwise
- * a valid result set is always returned which may contain 0 or more elements.
- * The result set must be deallocated with kd_res_free after use.
- */
-kdres *kd_nearest_range(kdtree *tree, const double *pos, double range);
-
-/* frees a result set returned by kd_nearest_range() */
-void kd_res_free(kdres *set);
-
-/* returns the size of the result set (in elements) */
-int kd_res_size(kdres *set);
-
-/* rewinds the result set iterator */
-void kd_res_rewind(kdres *set);
-
-/* returns non-zero if the set iterator reached the end after the last element */
-int kd_res_end(kdres *set);
-
-/* advances the result set iterator, returns non-zero on success, zero if
- * there are no more elements in the result set.
- */
-int kd_res_next(kdres *set);
-
-/* returns the data pointer (can be null) of the current result set item
- * and optionally sets its position to the pointers(s) if not null.
- */
-void *kd_res_item(kdres *set, double *pos);
-
-/* equivalent to kd_res_item(set, 0) */
-void *kd_res_item_data(kdres *set);
-
-void* kdnode_data(kdnode *node);
-double* kdnode_pos(kdnode *node);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif	/* _KDTREE_H_ */

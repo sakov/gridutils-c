@@ -636,7 +636,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
 
                     pos[0] = (double) i + 0.5;
                     pos[1] = (double) j + 0.5;
-                    kd_insert(kt, pos, NULL);
+                    kd_insertnode(kt, pos, id);
                 }
             }
 
@@ -651,12 +651,12 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
                 for (i = 0; i < gn1->nx; ++i) {
                     double pos[2];
                     double* pos1;
-                    kdnode* nearest = NULL;
+                    size_t nearest;
 
                     pos[0] = (double) i - 0.5;
                     pos[1] = (double) j - 0.5;
-                    nearest = kd_nearest(kt, pos);
-                    pos1 = kdnode_pos(nearest);
+                    nearest = kd_findnearestnode(kt, pos);
+                    pos1 = kd_getnodecoords(kt, nearest);
 
                     if (hypot(pos1[0] - pos[0], pos1[1] - pos[1]) < 1.5) {
                         fij2xy(gn, pos[0], pos[1], (int) pos1[0], (int) pos1[1], &gn1->gx[j][i], &gn1->gy[j][i]);
@@ -668,7 +668,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             }
             gn1->type = NT_COR;
             gridnodes_validate_cor(gn1);
-            kd_free(kt);
+            kd_destroy(kt);
         } else if (type == NT_DD) {
             kdtree* kt = kd_create(2);  /* 2 dimensions */
             int* ids = NULL;
@@ -703,7 +703,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
 
                     pos[0] = (double) i + 0.5;
                     pos[1] = (double) j + 0.5;
-                    kd_insert(kt, pos, NULL);
+                    kd_insertnode(kt, pos, id);
                 }
             }
 
@@ -718,12 +718,12 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
                 for (i = 0; i < gn1->nx; ++i) {
                     double pos[2];
                     double* pos1;
-                    struct kdnode* nearest = NULL;
+                    size_t nearest;
 
                     pos[0] = (double) i / 2.0 - 0.5;
                     pos[1] = (double) j / 2.0 - 0.5;
-                    nearest = kd_nearest(kt, pos);
-                    pos1 = kdnode_pos(nearest);
+                    nearest = kd_findnearestnode(kt, pos);
+                    pos1 = kd_getnodecoords(kt, nearest);
 
                     if (hypot(pos1[0] - pos[0], pos1[1] - pos[1]) < 1.5) {
                         fij2xy(gn, pos[0], pos[1], (int) pos1[0], (int) pos1[1], &gn1->gx[j][i], &gn1->gy[j][i]);
@@ -735,7 +735,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             }
             gn1->type = NT_DD;
             gridnodes_validate_dd(gn1);
-            kd_free(kt);
+            kd_destroy(kt);
         }
     }
 
