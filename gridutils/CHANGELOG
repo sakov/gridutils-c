@@ -1,3 +1,6 @@
+v. 1.02.1 23 March 2016
+        -- in gridkmap_xy2ij() added check for being inside bounding rectangle
+        -- in gridmap_xy2ij() added check for being finite
 v. 1.02.0 23 March 2016
 	-- Moved global variable "gridmaptype" to gridmap.type
 v. 1.01.4 23 March 2016
