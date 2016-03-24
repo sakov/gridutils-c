@@ -626,8 +626,9 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
     } else if (gn->type == NT_CEN) {
         if (type == NT_COR) {
             kdtree* kt = kd_create(2);  /* 2 dimensions */
-            int* ids = NULL;
-            int n, ii, i, j;
+            size_t* ids = NULL;
+	    size_t n, ii;
+            int i, j;
 
             gn1->nx = gn->nx + 1;
             gn1->ny = gn->ny + 1;
@@ -638,7 +639,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
              * shuffle the grid nodes
              */
             n = (gn->nx - 1) * (gn->ny - 1);
-            ids = malloc(n * sizeof(int));
+            ids = malloc(n * sizeof(size_t));
             for (j = 0, ii = 0; j < gn->ny - 1; ++j)
                 for (i = 0; i < gn->nx - 1; ++i, ++ii)
                     ids[ii] = j * gn->nx + i;
@@ -648,7 +649,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
              * put positions of the cells formed by cell centers into kd tree
              */
             for (ii = 0; ii < n; ++ii) {
-                int id = ids[ii];
+                size_t id = ids[ii];
 
                 i = id % gn->nx;
                 j = id / gn->nx;
@@ -693,8 +694,9 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             kd_destroy(kt);
         } else if (type == NT_DD) {
             kdtree* kt = kd_create(2);  /* 2 dimensions */
-            int* ids = NULL;
-            int n, ii, i, j;
+            size_t* ids = NULL;
+	    size_t n, ii;
+            int i, j;
 
             gn1->nx = gn->nx * 2 + 1;
             gn1->ny = gn->ny * 2 + 1;
@@ -705,7 +707,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
              * shuffle the grid nodes
              */
             n = (gn->nx - 1) * (gn->ny - 1);
-            ids = malloc(n * sizeof(int));
+            ids = malloc(n * sizeof(size_t));
             for (j = 0, ii = 0; j < gn->ny - 1; ++j)
                 for (i = 0; i < gn->nx - 1; ++i, ++ii)
                     ids[ii] = j * gn->nx + i;
