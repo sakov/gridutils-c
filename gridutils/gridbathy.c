@@ -371,7 +371,7 @@ int main(int argc, char* argv[])
     /*
      * build the grid map for physical <-> index space conversions
      */
-    gm = gridmap_build(gridnodes_getnce1(gn), gridnodes_getnce2(gn), gridnodes_getx(gn), gridnodes_gety(gn));
+    gm = gridmap_build(gridnodes_getnce1(gn), gridnodes_getnce2(gn), gridnodes_getx(gn), gridnodes_gety(gn), gridnodes_getmaptype(gn));
 
     /*
      * convert bathymetry to index space if necessary 

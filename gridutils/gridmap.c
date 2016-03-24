@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "poly.h"
+#include "gridnodes.h"
 #include "gridmap.h"
 #include "gridbmap.h"
 #include "gridkmap.h"
@@ -43,25 +44,48 @@
 #define EPS 1.0e-8
 #define EPS_ZERO 1.0e-5
 
-int gridmaptype = GRIDMAP_TYPE_DEF;
-
 struct gridmap {
     void* map;
+    int type;
     int sign;
 };
 
 /**
  */
-gridmap* gridmap_build(int nce1, int nce2, double** gx, double** gy)
+gridmap* gridmap_build(int nce1, int nce2, double** gx, double** gy, int type)
 {
     gridmap* gm = malloc(sizeof(gridmap));
 
-    if (gridmaptype == GRIDMAP_TYPE_BINARY)
+    gm->type = type;
+    if (gm->type == GRIDMAP_TYPE_BINARY)
         gm->map = gridbmap_build(nce1, nce2, gx, gy);
-    else if (gridmaptype == GRIDMAP_TYPE_KDTREE)
+    else if (gm->type == GRIDMAP_TYPE_KDTREE)
         gm->map = gridkmap_build(nce1, nce2, gx, gy);
     else
-        gu_quit("gridmaptype = %d: unknown type");
+        gu_quit("grid map type = %d: unknown type", type);
+    gm->sign = 0;
+
+    return gm;
+}
+
+/**
+ */
+gridmap* gridmap_build2(gridnodes* gn)
+{
+    gridmap* gm = malloc(sizeof(gridmap));
+    int nce1 = gridnodes_getnce1(gn);
+    int nce2 = gridnodes_getnce2(gn);
+    double** gx = gridnodes_getx(gn);
+    double** gy = gridnodes_gety(gn);
+    int type = gridnodes_getmaptype(gn);
+
+    gm->type = type;
+    if (gm->type == GRIDMAP_TYPE_BINARY)
+        gm->map = gridbmap_build(nce1, nce2, gx, gy);
+    else if (gm->type == GRIDMAP_TYPE_KDTREE)
+        gm->map = gridkmap_build(nce1, nce2, gx, gy);
+    else
+        gu_quit("grid map type = %d: unknown type", type);
     gm->sign = 0;
 
     return gm;
@@ -71,9 +95,9 @@ gridmap* gridmap_build(int nce1, int nce2, double** gx, double** gy)
  */
 void gridmap_destroy(gridmap* gm)
 {
-    if (gridmaptype == GRIDMAP_TYPE_BINARY)
+    if (gm->type == GRIDMAP_TYPE_BINARY)
         gridbmap_destroy(gm->map);
-    else if (gridmaptype == GRIDMAP_TYPE_KDTREE)
+    else if (gm->type == GRIDMAP_TYPE_KDTREE)
         gridkmap_destroy(gm->map);
 
     free(gm);
@@ -85,9 +109,9 @@ int gridmap_xy2ij(gridmap* gm, double x, double y, int* i, int* j)
 {
     int success = 0;
 
-    if (gridmaptype == GRIDMAP_TYPE_BINARY)
+    if (gm->type == GRIDMAP_TYPE_BINARY)
         success = gridbmap_xy2ij(gm->map, x, y, i, j);
-    else if (gridmaptype == GRIDMAP_TYPE_KDTREE)
+    else if (gm->type == GRIDMAP_TYPE_KDTREE)
         success = gridkmap_xy2ij(gm->map, x, y, i, j);
 
     return success;
@@ -116,12 +140,12 @@ int gridmap_fij2xy(gridmap* gm, double fi, double fj, double* x, double* y)
     double u, v;
     double a, b, c, d, e, f, g, h;
 
-    if (gridmaptype == GRIDMAP_TYPE_BINARY) {
+    if (gm->type == GRIDMAP_TYPE_BINARY) {
         gx = gridbmap_getxnodes(gm->map);
         gy = gridbmap_getynodes(gm->map);
         nce1 = gridbmap_getnce1(gm->map);
         nce2 = gridbmap_getnce2(gm->map);
-    } else if (gridmaptype == GRIDMAP_TYPE_KDTREE) {
+    } else if (gm->type == GRIDMAP_TYPE_KDTREE) {
         gx = gridkmap_getxnodes(gm->map);
         gy = gridkmap_getynodes(gm->map);
         nce1 = gridkmap_getnce1(gm->map);
@@ -208,10 +232,10 @@ static int calc_branch(gridmap* gm, double x, double y)
     if (gridmap_xy2ij(gm, x, y, &i, &j) == 0)
         return 0;               /* failed */
 
-    if (gridmaptype == GRIDMAP_TYPE_BINARY) {
+    if (gm->type == GRIDMAP_TYPE_BINARY) {
         gx = gridbmap_getxnodes(gm->map);
         gy = gridbmap_getynodes(gm->map);
-    } else if (gridmaptype == GRIDMAP_TYPE_KDTREE) {
+    } else if (gm->type == GRIDMAP_TYPE_KDTREE) {
         gx = gridkmap_getxnodes(gm->map);
         gy = gridkmap_getynodes(gm->map);
     }
@@ -290,10 +314,10 @@ int gridmap_xy2fij(gridmap* gm, double x, double y, double* fi, double* fj)
     if (gridmap_xy2ij(gm, x, y, &i, &j) == 0)
         return 0;               /* failed */
 
-    if (gridmaptype == GRIDMAP_TYPE_BINARY) {
+    if (gm->type == GRIDMAP_TYPE_BINARY) {
         gx = gridbmap_getxnodes(gm->map);
         gy = gridbmap_getynodes(gm->map);
-    } else if (gridmaptype == GRIDMAP_TYPE_KDTREE) {
+    } else if (gm->type == GRIDMAP_TYPE_KDTREE) {
         gx = gridkmap_getxnodes(gm->map);
         gy = gridkmap_getynodes(gm->map);
     }
@@ -350,9 +374,9 @@ int gridmap_getnce1(gridmap* gm)
 {
     int nce1 = -1;
 
-    if (gridmaptype == GRIDMAP_TYPE_BINARY)
+    if (gm->type == GRIDMAP_TYPE_BINARY)
         nce1 = gridbmap_getnce1(gm->map);
-    else if (gridmaptype == GRIDMAP_TYPE_KDTREE)
+    else if (gm->type == GRIDMAP_TYPE_KDTREE)
         nce1 = gridkmap_getnce1(gm->map);
 
     return nce1;
@@ -364,9 +388,9 @@ int gridmap_getnce2(gridmap* gm)
 {
     int nce2 = -1;
 
-    if (gridmaptype == GRIDMAP_TYPE_BINARY)
+    if (gm->type == GRIDMAP_TYPE_BINARY)
         nce2 = gridbmap_getnce2(gm->map);
-    else if (gridmaptype == GRIDMAP_TYPE_KDTREE)
+    else if (gm->type == GRIDMAP_TYPE_KDTREE)
         nce2 = gridkmap_getnce2(gm->map);
 
     return nce2;

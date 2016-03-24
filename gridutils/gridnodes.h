@@ -53,5 +53,7 @@ double** gridnodes_getx(gridnodes* gn);
 double** gridnodes_gety(gridnodes* gn);
 int gridnodes_getnce1(gridnodes* gn);
 int gridnodes_getnce2(gridnodes* gn);
+void gridnodes_setmaptype(gridnodes* gn, int type);
+int gridnodes_getmaptype(gridnodes* gn);
 
 #endif

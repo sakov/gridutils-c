@@ -52,6 +52,7 @@ struct gridnodes {
     int validated;
     gridstats* stats;
     int nextpoint;
+    int maptype;
 };
 
 char* nodetype2str[] = {
@@ -146,6 +147,7 @@ gridnodes* gridnodes_read(char* fname, NODETYPE type)
 
     gn->validated = 0;
     gn->stats = NULL;
+    gn->maptype = GRIDMAP_TYPE_DEF;
 
     return gn;
 }
@@ -168,6 +170,7 @@ gridnodes* gridnodes_create(int nx, int ny, NODETYPE type)
     gn->validated = 0;
     gn->stats = NULL;
     gn->nextpoint = 0;
+    gn->maptype = GRIDMAP_TYPE_DEF;
 
     return gn;
 }
@@ -192,6 +195,7 @@ gridnodes* gridnodes_create2(int nx, int ny, NODETYPE type, double** gx, double*
     gn->validated = 0;
     gn->stats = NULL;
     gn->nextpoint = 0;
+    gn->maptype = GRIDMAP_TYPE_DEF;
 
     return gn;
 }
@@ -587,7 +591,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
         }
     } else if (gn->type == NT_COR) {
         if (type == NT_CEN) {
-            gridmap* gm = gridmap_build(gn->nx - 1, gn->ny - 1, gn->gx, gn->gy);
+            gridmap* gm = gridmap_build(gn->nx - 1, gn->ny - 1, gn->gx, gn->gy, gridnodes_getmaptype(gn));
 
             gn1->nx = gn->nx - 1;
             gn1->ny = gn->ny - 1;
@@ -603,7 +607,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
 
             gridmap_destroy(gm);
         } else if (type == NT_DD) {
-            gridmap* gm = gridmap_build(gn->nx - 1, gn->ny - 1, gn->gx, gn->gy);
+            gridmap* gm = gridmap_build(gn->nx - 1, gn->ny - 1, gn->gx, gn->gy, gridnodes_getmaptype(gn));
 
             gn1->nx = gn->nx * 2 - 1;
             gn1->ny = gn->ny * 2 - 1;
@@ -1076,4 +1080,18 @@ int gridnodes_getnce2(gridnodes* gn)
         gu_quit("gridnodes_getnce2(): node type not specified");
 
     return 0;
+}
+
+/**
+ */
+void gridnodes_setmaptype(gridnodes* gn, int type)
+{
+    gn->maptype = type;
+}
+
+/**
+ */
+int gridnodes_getmaptype(gridnodes* gn)
+{
+    return gn->maptype;
 }

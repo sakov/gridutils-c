@@ -27,12 +27,11 @@
 #define GRIDMAP_TYPE_KDTREE 1
 #define GRIDMAP_TYPE_DEF GRIDMAP_TYPE_BINARY
 
-extern int gridmaptype;
-
 struct gridmap;
 typedef struct gridmap gridmap;
 
-gridmap* gridmap_build(int nce1, int nce2, double** gx, double** gy);
+gridmap* gridmap_build(int nce1, int nce2, double** gx, double** gy, int type);
+gridmap* gridmap_build2(gridnodes* gn);
 void gridmap_destroy(gridmap* gm);
 int gridmap_fij2xy(gridmap* gm, double fi, double fj, double* x, double* y);
 int gridmap_xy2ij(gridmap* gm, double x, double y, int* i, int* j);

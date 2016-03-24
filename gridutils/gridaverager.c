@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "nan.h"
+#include "gridnodes.h"
 #include "gridmap.h"
 #include "gucommon.h"
 #include "gridaverager.h"

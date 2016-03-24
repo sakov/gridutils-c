@@ -21,16 +21,16 @@
 #include <math.h>
 #include <errno.h>
 #include "guquit.h"
-#include "gridmap.h"
-#include "gridkmap.h"
-#include "gucommon.h"
 #include "gridnodes.h"
+#include "gridmap.h"
+#include "gucommon.h"
 
 #define BUFSIZE 10240
 
 static int reverse = 0;
 static int force = 0;
 static NODETYPE nt = NT_DD;
+static int gridmaptype = GRIDMAP_TYPE_DEF;
 
 typedef int (*mapfn) (void*, double, double, double*, double*);
 
@@ -200,7 +200,7 @@ int main(int argc, char* argv[])
      */
     if (gu_verbose)
         fprintf(stderr, "## parsing the grid into %s...", (gridmaptype == GRIDMAP_TYPE_KDTREE) ? "kd-tree" : "binary tree");
-    map = gridmap_build(gridnodes_getnce1(gn), gridnodes_getnce2(gn), gridnodes_getx(gn), gridnodes_gety(gn));
+    map = gridmap_build(gridnodes_getnce1(gn), gridnodes_getnce2(gn), gridnodes_getx(gn), gridnodes_gety(gn), gridmaptype);
     if (gu_verbose)
         fprintf(stderr, "done\n");
 
