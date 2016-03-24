@@ -530,15 +530,15 @@ static void fij2xy(gridnodes* gn, double fi, double fj, int i, int j, double* x,
 
 /**
  */
-static void shuffle(int n, int ids[])
+static void shuffle(size_t n, size_t ids[])
 {
-    int i;
+    size_t i;
 
     srand48(SEED);
 
     for (i = 0; i < n; ++i) {
-        int ii = (int) ((double) n * drand48());
-        int tmp = ids[i];
+        size_t ii = (size_t) ((double) n * drand48());
+        size_t tmp = ids[i];
 
         ids[i] = ids[ii];
         ids[ii] = tmp;
