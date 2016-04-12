@@ -9,7 +9,7 @@ then
 fi
 
 echo
-echo "input double density grid: gridnodes.txt"
+echo "Input double density grid: gridpoints_DD-raw.txt"
 echo
 
 echo "1. Validating and printing some stats:"
