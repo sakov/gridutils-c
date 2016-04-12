@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
     void* map = NULL;
     mapfn fn = NULL;
     char buf[BUFSIZE];
-    int count;
+    int count, count_success;
 
     parse_commandline(argc, argv, &gfname, &ofname);
     if (nt == NT_DD) {
@@ -217,15 +217,17 @@ int main(int argc, char* argv[])
     if (gu_verbose)
         fprintf(stderr, "## mapping the points: ");
     count = 0;
+    count_success = 0;
     while (fgets(buf, BUFSIZE, of) != NULL) {
         char rem[BUFSIZE] = "";
         double xc, yc, ic, jc;
 
         if (sscanf(buf, "%lf %lf %[^\n]", &xc, &yc, rem) >= 2) {
             if (fn(map, xc, yc, &ic, &jc)) {
-                if (!isnan(ic))
+                if (!isnan(ic)) {
+                    count_success++;
                     printf("%.15g %.15g %s\n", ic, jc, rem);
-                else
+                } else
                     printf("NaN NaN %s\n", rem);
             } else {
                 if (!force)
@@ -239,8 +241,12 @@ int main(int argc, char* argv[])
         } else
             printf("%s", buf);
     }
-    if (gu_verbose)
+    if (gu_verbose) {
         fprintf(stderr, "\n");
+        fprintf(stderr, "## total mappings: %d\n", count);
+        fprintf(stderr, "##   successful: %d\n", count_success);
+        fprintf(stderr, "##   unsuccessful: %d\n", count- count_success);
+    }
 
     if (of != stdin)
         fclose(of);

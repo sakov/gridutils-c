@@ -646,7 +646,7 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
             shuffle(n, ids);
 
             /*
-             * put positions of the cells formed by cell centers into kd tree
+             * put positions of cells formed by cell centers into kd tree
              */
             for (ii = 0; ii < n; ++ii) {
                 size_t id = ids[ii];
