@@ -1,3 +1,5 @@
+v. 1.02.3 13 April 2016
+        -- xy2ij: added reporting coordinates of cell with maximum aspect ratio
 v. 1.02.2 13 April 2016
         -- Added statistics on the number of successfull/unsuccessful mappings
            in xy2ij.

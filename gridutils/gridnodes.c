@@ -40,6 +40,8 @@ typedef struct {
     int jmdo;
     double ado;                 /* average deviation from orthogonality */
     double mar;                 /* maximum aspect ratio */
+    int imar;
+    int jmar;
     double aar;                 /* average aspect ratio */
 } gridstats;
 
@@ -942,6 +944,8 @@ static void gridnodes_calcstats_cor(gridnodes* gn)
     int ncell = 0;
     int imdo = -1;
     int jmdo = -1;
+    int imar = -1;
+    int jmar = -1;
     int i, j;
 
     if (gn->stats == NULL)
@@ -973,8 +977,11 @@ static void gridnodes_calcstats_cor(gridnodes* gn)
                 ar = hypot(x[j][i] + x[j][i + 1] - x[j + 1][i] - x[j + 1][i + 1], y[j][i] + y[j][i + 1] - y[j + 1][i] - y[j + 1][i + 1]) / hypot(x[j][i] + x[j + 1][i] - x[j][i + 1] - x[j + 1][i + 1], y[j][i] + y[j + 1][i] - y[j][i + 1] - y[j + 1][i + 1]);
                 if (ar < 1.0)
                     ar = 1.0 / ar;
-                if (ar > ar_max)
+                if (ar > ar_max) {
                     ar_max = ar;
+                    imar = i;
+                    jmar = j;
+                }
                 ar_sum += ar;
 
                 ncell++;
@@ -985,6 +992,8 @@ static void gridnodes_calcstats_cor(gridnodes* gn)
     gn->stats->jmdo = jmdo;
     gn->stats->ado = dor_sum / ncell / 4.0;
     gn->stats->mar = ar_max;
+    gn->stats->imar = imar;
+    gn->stats->jmar = jmar;
     gn->stats->aar = ar_sum / ncell;
 }
 
@@ -1019,7 +1028,7 @@ void gridnodes_calcstats(gridnodes* gn)
     if (gu_verbose) {
         fprintf(stderr, "## maximum deviation from orthogonality = %.3f deg, in cell (%d,%d)\n", gn->stats->mdo, gn->stats->imdo, gn->stats->jmdo);
         fprintf(stderr, "## mean deviation from orthogonality = %.3f deg\n", gn->stats->ado);
-        fprintf(stderr, "## maximum aspect ratio = %.3f\n", gn->stats->mar);
+        fprintf(stderr, "## maximum aspect ratio = %.3f, in cell (%d,%d)\n", gn->stats->mar, gn->stats->imar, gn->stats->jmar);
         fprintf(stderr, "## mean aspect ratio = %.3f\n", gn->stats->aar);
     }
 }

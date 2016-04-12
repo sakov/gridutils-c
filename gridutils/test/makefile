@@ -1,4 +1,4 @@
 all:
 	./test.sh
 clean:
-	rm -f bathy-*.txt bound*.txt gridpoints_CO.txt x.txt y.txt *~ core
+	rm -f bathy-*.txt bound*.txt gridpoints_??.txt gridpoints_???.txt x.txt y.txt *~ core
