@@ -75,8 +75,8 @@ void gridkmap_destroy(gridkmap* gm)
  */
 int gridkmap_xy2ij(gridkmap* gm, double x, double y, int* iout, int* jout)
 {
-    double pos[2] = { x, y };
     double* minmax = kd_getminmax(gm->tree);
+    double pos[2];
     size_t nearest;
     size_t id;
     poly* p;
@@ -86,6 +86,8 @@ int gridkmap_xy2ij(gridkmap* gm, double x, double y, int* iout, int* jout)
     if (x < minmax[0] || y < minmax[1] || x > minmax[2] || y > minmax[3])
         return success;
 
+    pos[0] = x;
+    pos[1] = y;
     nearest = kd_findnearestnode(gm->tree, pos);
     id = kd_getnodeorigid(gm->tree, nearest);
     p = poly_create();
