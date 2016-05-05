@@ -69,8 +69,9 @@ FILE* gu_fopen(const char* path, const char* mode)
     return f;
 }
 
-/** Allocates ni x nj matrix of something. It will be accessed as [j][i].
- * In maths it would be A(i,j). For deallocation use free().
+/** Allocates ni x nj matrix of something and fills it with zeros. An element
+ * (i,j) will be accessed as [j][i]. For deallocation use free().
+ *
  * @param nj Dimension 2
  * @param ni Dimension 1
  * @param unitsize Size of one matrix element in bytes
