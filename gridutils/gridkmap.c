@@ -84,7 +84,7 @@ int gridkmap_xy2ij(gridkmap* gm, double x, double y, int* iout, int* jout)
     int success = 0;
 
     if (x < minmax[0] || y < minmax[1] || x > minmax[2] || y > minmax[3])
-	return success;
+        return success;
 
     nearest = kd_findnearestnode(gm->tree, pos);
     id = kd_getnodeorigid(gm->tree, nearest);

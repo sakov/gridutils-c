@@ -112,7 +112,7 @@ int gridmap_xy2ij(gridmap* gm, double x, double y, int* i, int* j)
     *i = -1;
     *j = -1;
     if (!isfinite(x + y))
-	return success;
+        return success;
 
     if (gm->type == GRIDMAP_TYPE_BINARY)
         success = gridbmap_xy2ij(gm->map, x, y, i, j);

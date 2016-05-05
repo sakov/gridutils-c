@@ -69,51 +69,44 @@ FILE* gu_fopen(const char* path, const char* mode)
     return f;
 }
 
-/** Allocates n1xn2 matrix of something. Note that it will be accessed as 
- * [n2][n1].
- * @param n1 Number of columns
- * @param n2 Number of rows
+/** Allocates ni x nj matrix of something. It will be accessed as [j][i].
+ * In maths it would be A(i,j). For deallocation use free().
+ * @param nj Dimension 2
+ * @param ni Dimension 1
  * @param unitsize Size of one matrix element in bytes
  * @return Matrix
  */
-void* gu_alloc2d(int n1, int n2, size_t unitsize)
+void* gu_alloc2d(size_t nj, size_t ni, size_t unitsize)
 {
     size_t size;
-    char* p;
-    char** pp;
+    void* p;
+    void** pp;
     int i;
 
-    if (n1 <= 0 || n2 <= 0)
-        gu_quit("alloc2d(): invalid size (n1 = %d, n2 = %d)", n1, n2);
+    if (ni <= 0 || nj <= 0)
+        gu_quit("gu_alloc2d(): invalid size (nj = %d, ni = %d)", nj, ni);
 
-    size = n1 * n2;
-    if ((p = calloc(size, unitsize)) == NULL) {
+    size = nj * sizeof(void*) + nj * ni * unitsize;
+    if ((p = malloc(size)) == NULL) {
         int errno_saved = errno;
 
-        gu_quit("gu_alloc2d(): %s", strerror(errno_saved));
+        gu_quit("alloc2d(): %s", strerror(errno_saved));
     }
+    memset(p, 0, size);
 
-    size = n2 * sizeof(void*);
-    if ((pp = malloc(size)) == NULL) {
-        int errno_saved = errno;
-
-        gu_quit("gu_alloc2d(): %s", strerror(errno_saved));
-    }
-    for (i = 0; i < n2; i++)
-        pp[i] = &p[i * n1 * unitsize];
+    pp = p;
+    p = &((size_t *) p)[nj];
+    for (i = 0; i < nj; i++)
+        pp[i] = &((char*) p)[i * ni * unitsize];
 
     return pp;
 }
 
 /** Destroys a matrix.
- * @param pp Matrix
+ * @param p Matrix
  */
-void gu_free2d(void* pp)
+void gu_free2d(void* p)
 {
-    void* p;
-
-    p = ((void**) pp)[0];
-    free(pp);
     free(p);
 }
 
@@ -132,7 +125,7 @@ int** gu_readmask(char* fname, int nx, int ny)
     else
         f = gu_fopen(fname, "r");
 
-    v = gu_alloc2d(nx, ny, sizeof(int));
+    v = gu_alloc2d(ny, nx, sizeof(int));
 
     for (j = 0, count = 0; j < ny; ++j) {
         for (i = 0; i < nx; ++i) {

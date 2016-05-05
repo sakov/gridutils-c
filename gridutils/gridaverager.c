@@ -34,8 +34,8 @@ gridaverager* ga_create(gridmap* gm)
     gridaverager* ga = malloc(sizeof(gridaverager));
 
     ga->gm = gm;
-    ga->v = gu_alloc2d(gridmap_getnce1(gm), gridmap_getnce2(gm), sizeof(double));
-    ga->n = gu_alloc2d(gridmap_getnce1(gm), gridmap_getnce2(gm), sizeof(int));
+    ga->v = gu_alloc2d(gridmap_getnce2(gm), gridmap_getnce1(gm), sizeof(double));
+    ga->n = gu_alloc2d(gridmap_getnce2(gm), gridmap_getnce1(gm), sizeof(int));
 
     return ga;
 }

@@ -119,8 +119,8 @@ gridnodes* gridnodes_read(char* fname, NODETYPE type)
     /*
      * allocate storage 
      */
-    gn->gx = gu_alloc2d(gn->nx, gn->ny, sizeof(double));
-    gn->gy = gu_alloc2d(gn->nx, gn->ny, sizeof(double));
+    gn->gx = gu_alloc2d(gn->ny, gn->nx, sizeof(double));
+    gn->gy = gu_alloc2d(gn->ny, gn->nx, sizeof(double));
 
     /*
      * read grid nodes 
@@ -166,8 +166,8 @@ gridnodes* gridnodes_create(int nx, int ny, NODETYPE type)
 
     gn->nx = nx;
     gn->ny = ny;
-    gn->gx = gu_alloc2d(nx, ny, sizeof(double));
-    gn->gy = gu_alloc2d(nx, ny, sizeof(double));
+    gn->gx = gu_alloc2d(ny, nx, sizeof(double));
+    gn->gy = gu_alloc2d(ny, nx, sizeof(double));
     gn->type = type;
     gn->validated = 0;
     gn->stats = NULL;
@@ -430,8 +430,8 @@ gridnodes* gridnodes_copy(gridnodes* old)
     new->nx = old->nx;
     new->ny = old->ny;
     new->type = old->type;
-    new->gx = gu_alloc2d(old->nx, old->ny, sizeof(double));
-    new->gy = gu_alloc2d(old->nx, old->ny, sizeof(double));
+    new->gx = gu_alloc2d(old->ny, old->nx, sizeof(double));
+    new->gy = gu_alloc2d(old->ny, old->nx, sizeof(double));
     memcpy(&new->gx[0][0], &old->gx[0][0], old->nx * old->ny * sizeof(double));
     memcpy(&new->gy[0][0], &old->gy[0][0], old->nx * old->ny * sizeof(double));
 
@@ -468,8 +468,8 @@ gridnodes* gridnodes_subgrid(gridnodes* gn, int imin, int imax, int jmin, int jm
     new->nx = imax - imin + 1;
     new->ny = jmax - jmin + 1;
 
-    new->gx = gu_alloc2d(new->nx, new->ny, sizeof(double));
-    new->gy = gu_alloc2d(new->nx, new->ny, sizeof(double));
+    new->gx = gu_alloc2d(new->ny, new->nx, sizeof(double));
+    new->gy = gu_alloc2d(new->ny, new->nx, sizeof(double));
 
     for (j = jmin, jj = 0; j <= jmax; ++j, ++jj) {
         for (i = imin, ii = 0; i <= imax; ++i, ++ii) {
@@ -571,8 +571,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
         if (type == NT_COR) {
             gn1->nx = gn->nx / 2 + 1;
             gn1->ny = gn->ny / 2 + 1;
-            gn1->gx = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
-            gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
+            gn1->gx = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
+            gn1->gy = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
             for (j = 0, j1 = 0; j < gn->ny; j += 2, ++j1) {
                 for (i = 0, i1 = 0; i < gn->nx; i += 2, ++i1) {
                     gn1->gx[j1][i1] = gn->gx[j][i];
@@ -582,8 +582,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
         } else if (type == NT_CEN) {
             gn1->nx = gn->nx / 2;
             gn1->ny = gn->ny / 2;
-            gn1->gx = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
-            gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
+            gn1->gx = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
+            gn1->gy = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
             for (j = 1, j1 = 0; j < gn->ny; j += 2, ++j1) {
                 for (i = 1, i1 = 0; i < gn->nx; i += 2, ++i1) {
                     gn1->gx[j1][i1] = gn->gx[j][i];
@@ -597,8 +597,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
 
             gn1->nx = gn->nx - 1;
             gn1->ny = gn->ny - 1;
-            gn1->gx = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
-            gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
+            gn1->gx = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
+            gn1->gy = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
 
             /*
              * this may take a while 
@@ -613,8 +613,8 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
 
             gn1->nx = gn->nx * 2 - 1;
             gn1->ny = gn->ny * 2 - 1;
-            gn1->gx = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
-            gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
+            gn1->gx = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
+            gn1->gy = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
 
             /*
              * this may take a while 
@@ -629,13 +629,13 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
         if (type == NT_COR) {
             kdtree* kt = kd_create(2);  /* 2 dimensions */
             size_t* ids = NULL;
-	    size_t n, ii;
+            size_t n, ii;
             int i, j;
 
             gn1->nx = gn->nx + 1;
             gn1->ny = gn->ny + 1;
-            gn1->gx = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
-            gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
+            gn1->gx = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
+            gn1->gy = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
 
             /*
              * shuffle the grid nodes
@@ -697,13 +697,13 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
         } else if (type == NT_DD) {
             kdtree* kt = kd_create(2);  /* 2 dimensions */
             size_t* ids = NULL;
-	    size_t n, ii;
+            size_t n, ii;
             int i, j;
 
             gn1->nx = gn->nx * 2 + 1;
             gn1->ny = gn->ny * 2 + 1;
-            gn1->gx = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
-            gn1->gy = gu_alloc2d(gn1->nx, gn1->ny, sizeof(double));
+            gn1->gx = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
+            gn1->gy = gu_alloc2d(gn1->ny, gn1->nx, sizeof(double));
 
             /*
              * shuffle the grid nodes

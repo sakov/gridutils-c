@@ -1,3 +1,6 @@
+v. 1.03.0 5 May 2016
+        -- Changed interface and code in gu_alloc2d(). gu_free2d is now redundant
+           and maintained for backward compatibility only. Use free() instead.
 v. 1.02.3 13 April 2016
         -- xy2ij: added reporting coordinates of cell with maximum aspect ratio
 v. 1.02.2 13 April 2016

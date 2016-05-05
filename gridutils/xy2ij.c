@@ -245,7 +245,7 @@ int main(int argc, char* argv[])
         fprintf(stderr, "\n");
         fprintf(stderr, "## total mappings: %d\n", count);
         fprintf(stderr, "##   successful: %d\n", count_success);
-        fprintf(stderr, "##   unsuccessful: %d\n", count- count_success);
+        fprintf(stderr, "##   unsuccessful: %d\n", count - count_success);
     }
 
     if (of != stdin)
