@@ -66,7 +66,7 @@ function viewgrid(fname, f, i0, j0)
 
 function [nx, ny, x, y] = fload(fname);
     f = fopen(fname);
-    if (f < 0)
+    if f < 0
         return;
     end
   
@@ -78,7 +78,7 @@ function [nx, ny, x, y] = fload(fname);
     str = fgetl(f);
     [n, count] = sscanf(str, '## %d x %d');
 
-    if (count == 2 & n(1) > 0 & n(2) > 0)
+    if count == 2 & n(1) > 0 & n(2) > 0
         nx = n(1);
         ny = n(2);
         [xy] = fscanf(f, '%f', [2,inf]);
@@ -87,4 +87,5 @@ function [nx, ny, x, y] = fload(fname);
     end
   
     fclose(f);
+
     return
