@@ -72,7 +72,9 @@ AC_DEFUN([AC_CUSTOMISE],
 ])
 
 AC_CUSTOMISE
-AC_PROG_CC([clang gcc])
+dnl I like clang but... right now it generates segfault running tests if compiled with -O2
+dnl AC_PROG_CC([clang gcc])
+AC_PROG_CC([gcc])
 AC_PROG_INSTALL
 AC_CHECK_PROG(AR, ar, ar, :)
 
