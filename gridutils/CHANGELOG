@@ -1,3 +1,5 @@
+v. 1.03.2 22 June 2016
+        -- Replaced <values.h> by <float.h>
 v. 1.03.1 24 May 2016
         -- Fixed a defect (I believe) in _kd_findnearestnode().
 v. 1.03.0 5 May 2016

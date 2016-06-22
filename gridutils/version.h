@@ -14,6 +14,6 @@
 #if !defined(_VERSION_H)
 #define _VERSION_H
 
-char* gu_version = "1.03.1";
+char* gu_version = "1.03.2";
 
 #endif
