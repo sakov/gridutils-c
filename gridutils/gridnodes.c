@@ -43,6 +43,8 @@ typedef struct {
     int imar;
     int jmar;
     double aar;                 /* average aspect ratio */
+    double adx;                 /* average cell size by X */
+    double ady;                 /* average cell size by Y */
 } gridstats;
 
 struct gridnodes {
@@ -916,6 +918,8 @@ static void gridstats_init(gridstats* gs)
     gs->ado = NaN;
     gs->mar = NaN;
     gs->aar = NaN;
+    gs->adx = NaN;
+    gs->ady = NaN;
 }
 
 /**
@@ -941,6 +945,8 @@ static void gridnodes_calcstats_cor(gridnodes* gn)
     double dor_max = 0.0;
     double ar_max = 1.0;
     double ar_sum = 0.0;
+    double dx_sum = 0.0;
+    double dy_sum = 0.0;
     int ncell = 0;
     int imdo = -1;
     int jmdo = -1;
@@ -984,6 +990,9 @@ static void gridnodes_calcstats_cor(gridnodes* gn)
                 }
                 ar_sum += ar;
 
+                dx_sum += fabs(x[j][i + 1] - x[j][i] + x[j + 1][i + 1] - x[j + 1][i]);
+                dy_sum += fabs(y[j + 1][i + 1] - y[j][i + 1] + y[j + 1][i] - y[j][i]);
+
                 ncell++;
             }
 
@@ -995,6 +1004,8 @@ static void gridnodes_calcstats_cor(gridnodes* gn)
     gn->stats->imar = imar;
     gn->stats->jmar = jmar;
     gn->stats->aar = ar_sum / ncell;
+    gn->stats->adx = dx_sum / 2.0 / ncell;
+    gn->stats->ady = dy_sum / 2.0 / ncell;
 }
 
 /**
@@ -1030,6 +1041,7 @@ void gridnodes_calcstats(gridnodes* gn)
         fprintf(stderr, "## mean deviation from orthogonality = %.3f deg\n", gn->stats->ado);
         fprintf(stderr, "## maximum aspect ratio = %.3f, in cell (%d,%d)\n", gn->stats->mar, gn->stats->imar, gn->stats->jmar);
         fprintf(stderr, "## mean aspect ratio = %.3f\n", gn->stats->aar);
+        fprintf(stderr, "## mean cell size = %.3g x %.3g \n", gn->stats->adx, gn->stats->ady);
     }
 }
 

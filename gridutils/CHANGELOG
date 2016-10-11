@@ -1,3 +1,5 @@
+v. 1.04.0 11 October 2016
+        -- Added reporting of the average cell size by getnodes
 v. 1.03.2 22 June 2016
         -- Replaced <values.h> by <float.h>
 v. 1.03.1 24 May 2016
