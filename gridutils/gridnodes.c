@@ -990,8 +990,8 @@ static void gridnodes_calcstats_cor(gridnodes* gn)
                 }
                 ar_sum += ar;
 
-                dx_sum += fabs(x[j][i + 1] - x[j][i] + x[j + 1][i + 1] - x[j + 1][i]);
-                dy_sum += fabs(y[j + 1][i + 1] - y[j][i + 1] + y[j + 1][i] - y[j][i]);
+                dx_sum += hypot(x[j][i + 1] - x[j][i], y[j][i + 1] - y[j][i]) + hypot(x[j + 1][i + 1] - x[j + 1][i], y[j + 1][i + 1] - y[j + 1][i]);
+                dy_sum += hypot(x[j + 1][i + 1] - x[j][i + 1], y[j + 1][i + 1] - y[j][i + 1]) + hypot(x[j + 1][i] - x[j][i], y[j + 1][i] - y[j][i]);
 
                 ncell++;
             }
