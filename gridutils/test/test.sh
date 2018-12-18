@@ -117,6 +117,10 @@ then
     echo "done"
     echo "     (bathy.txt -> bathy-ns.txt)"
     echo
+
+    # write X and Y coordinates of the DD grid necessary for running viewbathy.m
+    ../getnodes gridpoints_DD.txt -x | tail -n +2 > x.txt
+    ../getnodes gridpoints_DD.txt -y | tail -n +2 > y.txt
 else
     echo "no ../gridbathy found"
     echo "omitting tests for gridbathy"

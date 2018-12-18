@@ -57,6 +57,12 @@ function vb(fname_z, fname_x, fname_y, nce1, nce2, zmax);
         ix = ix + nx + 1;
     end
     axis equal;
+    set(gca, 'XTick', [], 'YTick', []);
+    xrange = [min(x) max(x)];
+    xlim([xrange(1) - (xrange(2) - xrange(1)) * 0.05, xrange(2) + (xrange(2) - xrange(1)) * 0.05]);
+    yrange = [min(y) max(y)];
+    ylim([yrange(1) - (yrange(2) - yrange(1)) * 0.05, yrange(2) + (yrange(2) - yrange(1)) * 0.05]);
+    box on;
     hold off;
 
     return;

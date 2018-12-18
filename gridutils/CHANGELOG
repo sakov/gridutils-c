@@ -1,3 +1,7 @@
+v. 1.04.3 18 December 2018
+        -- Added writing of X and Y nodes of DD grid required by viewbathy.n to
+           x.txt and y.txt
+        -- Made a few cosmetic changes in vb.m and viewbathy.m
 v. 1.04.2 18 December 2018
         -- Initialised *fi and *fj to NaNs in gridmap_xy2fij()
 v. 1.04.1 13 October 2016
