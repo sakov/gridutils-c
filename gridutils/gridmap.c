@@ -34,6 +34,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include "nan.h"
 #include "poly.h"
 #include "gridnodes.h"
 #include "gridmap.h"
@@ -315,6 +316,9 @@ int gridmap_xy2fij(gridmap* gm, double x, double y, double* fi, double* fj)
     int i, j;
     double** gx = NULL;
     double** gy = NULL;
+
+    *fi = NaN;
+    *fj = NaN;
 
     if (gridmap_xy2ij(gm, x, y, &i, &j) == 0)
         return 0;               /* failed */
