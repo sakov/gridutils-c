@@ -1,3 +1,6 @@
+v. 1.04.4 19 December 2018
+        -- A couple of small changes in gridnodes.c related to initialising the
+           grid map type.
 v. 1.04.3 18 December 2018
         -- Added writing of X and Y nodes of DD grid required by viewbathy.n to
            x.txt and y.txt

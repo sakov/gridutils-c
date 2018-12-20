@@ -74,7 +74,7 @@ char* nodetype2str[] = {
  */
 gridnodes* gridnodes_read(char* fname, NODETYPE type)
 {
-    gridnodes* gn = malloc(sizeof(gridnodes));
+    gridnodes* gn = calloc(1, sizeof(gridnodes));
     FILE* f = NULL;
     int count;
     char buf[BUFSIZE];
@@ -479,6 +479,8 @@ gridnodes* gridnodes_subgrid(gridnodes* gn, int imin, int imax, int jmin, int jm
             new->gy[jj][ii] = gn->gy[j][i];
         }
     }
+
+    new->type = gn->type;
 
     return new;
 }
