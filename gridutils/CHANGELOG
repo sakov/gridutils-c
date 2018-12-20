@@ -1,3 +1,6 @@
+v. 1.04.5 19 December 2018
+        -- A few more changes in line with v1.04.5. Thanks to Gary Carroll for
+           reporting this defect.
 v. 1.04.4 19 December 2018
         -- A couple of small changes in gridnodes.c related to initialising the
            grid map type.

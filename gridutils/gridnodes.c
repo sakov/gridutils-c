@@ -427,11 +427,12 @@ void gridnodes_validate(gridnodes* gn)
  */
 gridnodes* gridnodes_copy(gridnodes* old)
 {
-    gridnodes* new = malloc(sizeof(gridnodes));
+    gridnodes* new = calloc(1, sizeof(gridnodes));
 
     new->nx = old->nx;
     new->ny = old->ny;
     new->type = old->type;
+    new->maptype = old->maptype;
     new->gx = gu_alloc2d(old->ny, old->nx, sizeof(double));
     new->gy = gu_alloc2d(old->ny, old->nx, sizeof(double));
     memcpy(&new->gx[0][0], &old->gx[0][0], old->nx * old->ny * sizeof(double));
@@ -465,7 +466,7 @@ gridnodes* gridnodes_subgrid(gridnodes* gn, int imin, int imax, int jmin, int jm
     if (imin == 0 && imax == gn->nx - 1 && jmin == 0 && jmax == gn->ny - 1)
         return gridnodes_copy(gn);
 
-    new = malloc(sizeof(gridnodes));
+    new = calloc(1, sizeof(gridnodes));
 
     new->nx = imax - imin + 1;
     new->ny = jmax - jmin + 1;
@@ -481,6 +482,7 @@ gridnodes* gridnodes_subgrid(gridnodes* gn, int imin, int imax, int jmin, int jm
     }
 
     new->type = gn->type;
+    new->maptype = gn->maptype;
 
     return new;
 }
@@ -567,9 +569,9 @@ gridnodes* gridnodes_transform(gridnodes* gn, NODETYPE type)
     if (gn->type == type || type == NT_NONE)
         return gridnodes_copy(gn);
 
-    gn1 = malloc(sizeof(gridnodes));
+    gn1 = calloc(1, sizeof(gridnodes));
     gn1->type = type;
-    gn1->stats = NULL;
+    gn1->maptype = gn->maptype;
 
     if (gn->type == NT_DD) {
         if (type == NT_COR) {
