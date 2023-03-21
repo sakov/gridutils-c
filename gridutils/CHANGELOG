@@ -1,3 +1,7 @@
+v. 1.04.6 22 March 2023
+        -- In gridaverager.h replaced "#if defined(_POINT_STRUCT)" by
+           "#if defined(_STRUCT_POINT)" to harmonise with current headers nn.h
+           and csa.h.
 v. 1.04.5 19 December 2018
         -- A few more changes in line with v1.04.5. Thanks to Gary Carroll for
            reporting this defect.
