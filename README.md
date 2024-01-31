@@ -18,4 +18,4 @@ To build the interpolation utility **gridbathy** one needs to install [nn](https
 Neighbours interpolation library and [csa](https://github.com/sakov/nn-c), a cubic spline approximation library. Apart 
 from that **gridutils** does not depend on other codes.
 
-Checkout **gridutils** by running `git clone https://github.com/sakov/gridutils-c` or `svn checkout https://github.com/sakov/gridutils-c`
+Checkout **gridutils** by running `git clone https://github.com/sakov/gridutils-c`.
